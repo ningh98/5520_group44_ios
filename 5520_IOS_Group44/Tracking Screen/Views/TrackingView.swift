@@ -34,6 +34,13 @@ class TrackingView: UIView {
         tableViewTotalTracking = UITableView()
         tableViewTotalTracking.register(TotalTrackingTableViewCell.self, forCellReuseIdentifier: Configs.tableViewTotalTrackingID)
         tableViewTotalTracking.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableViewTotalTracking.isScrollEnabled = false
+        tableViewTotalTracking.bounces = false
+        tableViewTotalTracking.alwaysBounceVertical = false
+        
+        tableViewTotalTracking.separatorStyle = .none
+        
         self.addSubview(tableViewTotalTracking)
     }
     
@@ -64,13 +71,11 @@ class TrackingView: UIView {
     func initConstraints(){
         NSLayoutConstraint.activate([
             tableViewTotalTracking.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 32),
-            tableViewTotalTracking.widthAnchor.constraint(equalToConstant: 200),
-            tableViewTotalTracking.heightAnchor.constraint(equalToConstant: 100),
+            tableViewTotalTracking.widthAnchor.constraint(equalToConstant: 300),
+            tableViewTotalTracking.heightAnchor.constraint(equalToConstant: 120),
             tableViewTotalTracking.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
             
-            
-            
-            tableViewMeal.topAnchor.constraint(equalTo: tableViewTotalTracking.bottomAnchor, constant: 8),
+            tableViewMeal.topAnchor.constraint(equalTo: tableViewTotalTracking.bottomAnchor, constant: 32),
             tableViewMeal.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             tableViewMeal.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             tableViewMeal.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
