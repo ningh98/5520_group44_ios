@@ -30,6 +30,22 @@ struct TrackingData: Codable {
     var protein: Double
     var carbs: Double
     var fats: Double
+    var targetCalories: Int
+    var targetProtein: Double
+    var targetCarbs: Double
+    var targetFats: Double
+    
+    init(calories: Int = 0, protein: Double = 0, carbs: Double = 0, fats: Double = 0,
+         targetCalories: Int = 2000, targetProtein: Double = 150, targetCarbs: Double = 250, targetFats: Double = 70) {
+        self.calories = calories
+        self.protein = protein
+        self.carbs = carbs
+        self.fats = fats
+        self.targetCalories = targetCalories
+        self.targetProtein = targetProtein
+        self.targetCarbs = targetCarbs
+        self.targetFats = targetFats
+    }
 }
 
 

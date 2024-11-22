@@ -22,10 +22,10 @@ extension TrackingViewController: UITableViewDelegate, UITableViewDataSource{
         if tableView == trackingView.tableViewTotalTracking {
             let cell = tableView.dequeueReusableCell(withIdentifier: Configs.tableViewTotalTrackingID, for: indexPath) as! TotalTrackingTableViewCell
             let total = trackingTotal[indexPath.row]
-            cell.labelCalories.text = "Daily Calories: \(total.calories)"
-            cell.labelProtein.text = "Daily Protein:\(total.protein)"
-            cell.labelCarbs.text = "Daily Carbs:\(total.carbs)"
-            cell.labelFat.text = "Daily Fats:\(total.fats)"
+            cell.labelCalories.text = "Daily Calories: \(total.calories)/\(total.targetCalories)"
+            cell.labelProtein.text = "Daily Protein: \(String(format: "%.1f", total.protein))/\(String(format: "%.1f", total.targetProtein))"
+            cell.labelCarbs.text = "Daily Carbs: \(String(format: "%.1f", total.carbs))/\(String(format: "%.1f", total.targetCarbs))"
+            cell.labelFat.text = "Daily Fats: \(String(format: "%.1f", total.fats))/\(String(format: "%.1f", total.targetFats))"
             return cell
         } else if tableView == trackingView.tableViewMeal {
             let cell = tableView.dequeueReusableCell(withIdentifier: Configs.tableViewMealID, for: indexPath) as! MealTableViewCell
