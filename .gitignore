@@ -42,3 +42,13 @@ xcschemes/xcschememanagement.plist
 # Ignore specific files you mentioned
 5520_IOS_Group44.xcodeproj/project.xcworkspace/xcuserdata/
 5520_IOS_Group44.xcodeproj/xcshareddata/swiftpm/Package.resolved
+
+# Ignore user-specific Xcode files
+5520_IOS_Group44.xcodeproj/xcuserdata/
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Ignore Swift Package Manager resolved files
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+# Ignore IDEWorkspace checks
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
