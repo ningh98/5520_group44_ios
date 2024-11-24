@@ -1,35 +1,54 @@
-
 # CocoaPods
 Pods/
 
 # Swift Package Manager
 # NB: slash on the end, so we only remove the FOLDER, not any files that were badly named "build"
+.build/
 build/
-
+*.resolved
 
 # Firebase/Google Services
 GoogleService-Info.plist
 
 # Xcode
-# NB: NIB/XIB files still exist even on Storyboard projects, so we want this...
-
-*~.nib
-
-# NB: slash on the end, so we only remove the FOLDER, not any files that were badly named "DerivedData"
+# Ignore Xcode user-specific files
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
 DerivedData/
+*.xcworkspace
 
+# Scheme Management
+xcschemes/xcschememanagement.plist
 
+# User-specific state files
+*.xcuserstate
 
-# OS X temporary files that should never be committed
-#
-# c.f. http://www.westwind.com/reference/os-x/invisibles.html
-
+# macOS Finder
 .DS_Store
 
-# c.f. http://www.westwind.com/reference/os-x/invisibles.html
-
+# macOS Trash
 .Trashes
 
-# c.f. http://www.westwind.com/reference/os-x/invisibles.html
-
+# Vim swap files
 *.swp
+
+# Temporary files created by the system
+*.tmp
+*.log
+
+# Ignore specific files you mentioned
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcuserdata/
+5520_IOS_Group44.xcodeproj/xcshareddata/swiftpm/Package.resolved
+
+# Ignore user-specific Xcode files
+5520_IOS_Group44.xcodeproj/xcuserdata/
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Ignore Swift Package Manager resolved files
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+# Ignore IDEWorkspace checks
+5520_IOS_Group44.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
