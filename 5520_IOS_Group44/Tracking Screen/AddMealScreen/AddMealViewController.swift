@@ -43,7 +43,7 @@ class AddMealViewController: UIViewController {
     // MARK: Fetch food data from FatSecret API
     func fetchFoodData(searchQuery: String) {
         // Replace with your Firebase function URL
-        let urlString = "https://us-central1-apiproxy-iosgroup44project.cloudfunctions.net/fatsecretProxy"
+        let urlString = "http://34.237.160.49:3000"
         
         var components = URLComponents(string: urlString)!
         components.queryItems = [
