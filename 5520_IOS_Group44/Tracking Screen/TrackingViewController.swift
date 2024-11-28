@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class TrackingViewController: UIViewController {
     
@@ -31,6 +32,9 @@ class TrackingViewController: UIViewController {
         trackingView.tableViewTotalTracking.delegate = self
         trackingView.tableViewTotalTracking.dataSource = self
         
+        //MARK: tapping the floating add meal button...
+        trackingView.floatingButtonAddMeal.addTarget(self, action: #selector(addMealButtonTapped), for: .touchUpInside)
+        
         trackingView.tableViewMeal.delegate = self
         trackingView.tableViewMeal.dataSource = self
         
@@ -49,6 +53,11 @@ class TrackingViewController: UIViewController {
         trackingView.tableViewMeal.reloadData()
     }
     
+    @objc func addMealButtonTapped(){
+        let addMealController = AddMealViewController()
+//        addMealController.currentUser = self.currentUser
+        navigationController?.pushViewController(addMealController, animated: true)
+    }
 
     /*
     // MARK: - Navigation
