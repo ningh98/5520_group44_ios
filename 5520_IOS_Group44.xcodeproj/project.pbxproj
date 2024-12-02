@@ -49,6 +49,9 @@
 		700AE5A82CF5B05800A7FF86 /* FoodDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */; };
 		700AE5AA2CF6742200A7FF86 /* FoodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */; };
 		A33D39452CFD31A000EF11CC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */; };
+		A33D39482CFD628D00EF11CC /* ChatbotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39472CFD628D00EF11CC /* ChatbotView.swift */; };
+		A33D394A2CFD62AE00EF11CC /* ChatbotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */; };
+		A33D394C2CFD825900EF11CC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D394B2CFD825900EF11CC /* MessageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,6 +96,9 @@
 		700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FoodDetailViewController.swift; path = "5520_IOS_Group44/Tracking Screen/AddMealScreen/FoodDetailViewController.swift"; sourceTree = SOURCE_ROOT; };
 		700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailView.swift; sourceTree = "<group>"; };
 		A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A33D39472CFD628D00EF11CC /* ChatbotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotView.swift; sourceTree = "<group>"; };
+		A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotViewController.swift; sourceTree = "<group>"; };
+		A33D394B2CFD825900EF11CC /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +134,7 @@
 		700AE53A2CF0543A00A7FF86 /* 5520_IOS_Group44 */ = {
 			isa = PBXGroup;
 			children = (
+				A33D39462CFD626600EF11CC /* Chatbot Screen */,
 				700AE53B2CF0543A00A7FF86 /* AppDelegate.swift */,
 				700AE53D2CF0543A00A7FF86 /* SceneDelegate.swift */,
 				700AE53F2CF0543A00A7FF86 /* ViewController.swift */,
@@ -268,6 +275,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		A33D39462CFD626600EF11CC /* Chatbot Screen */ = {
+			isa = PBXGroup;
+			children = (
+				A33D39472CFD628D00EF11CC /* ChatbotView.swift */,
+				A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */,
+				A33D394B2CFD825900EF11CC /* MessageCell.swift */,
+			);
+			path = "Chatbot Screen";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -354,6 +371,7 @@
 				700AE5902CF06B7B00A7FF86 /* TotalTrackingTableViewCell.swift in Sources */,
 				700AE5AA2CF6742200A7FF86 /* FoodDetailView.swift in Sources */,
 				700AE5792CF05F8A00A7FF86 /* MainScreenViewController.swift in Sources */,
+				A33D39482CFD628D00EF11CC /* ChatbotView.swift in Sources */,
 				700AE5642CF05D8300A7FF86 /* Configs.swift in Sources */,
 				700AE5402CF0543A00A7FF86 /* ViewController.swift in Sources */,
 				700AE57F2CF06A1300A7FF86 /* SignInProgressIndicatorManager.swift in Sources */,
@@ -365,6 +383,7 @@
 				700AE5672CF05DD600A7FF86 /* Log.swift in Sources */,
 				700AE5A42CF2A95C00A7FF86 /* SearchTableViewManager.swift in Sources */,
 				700AE5622CF05D3B00A7FF86 /* AuthManager.swift in Sources */,
+				A33D394C2CFD825900EF11CC /* MessageCell.swift in Sources */,
 				700AE53C2CF0543A00A7FF86 /* AppDelegate.swift in Sources */,
 				700AE5982CF06C3000A7FF86 /* ProfileView.swift in Sources */,
 				700AE58E2CF06B5600A7FF86 /* MealTableViewCell.swift in Sources */,
@@ -378,6 +397,7 @@
 				700AE5762CF05F4000A7FF86 /* RegisterView.swift in Sources */,
 				700AE56C2CF05E7A00A7FF86 /* ProgressSpinnerDelegate.swift in Sources */,
 				700AE5962CF06C1900A7FF86 /* ProfileViewController.swift in Sources */,
+				A33D394A2CFD62AE00EF11CC /* ChatbotViewController.swift in Sources */,
 				700AE59D2CF2A5D800A7FF86 /* AddMealViewController.swift in Sources */,
 				700AE5842CF06A6A00A7FF86 /* LogsTableViewCell.swift in Sources */,
 				700AE5A62CF5AB3000A7FF86 /* FoodInfo.swift in Sources */,
@@ -613,9 +633,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				kind = versionRange;
-				maximumVersion = 12.0.0;
-				minimumVersion = 10.5.0;
+				kind = exactVersion;
+				version = 10.5.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -37,7 +37,9 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabTracking.title = "Tracking"
         
         //MARK: setting up Fasting tab bar...
-        let tabFasting = UINavigationController(rootViewController: FastingViewController())
+        let fastingVC = FastingViewController()
+        fastingVC.currentUser = Auth.auth().currentUser
+        let tabFasting = UINavigationController(rootViewController: fastingVC)
         let tabFastingBarItem = UITabBarItem(
             title: "Fasting",
             image: UIImage(systemName: "clock")?.withRenderingMode(.alwaysTemplate),
@@ -49,15 +51,25 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         //MARK: setting up Profile tab bar...
         let tabProfile = UINavigationController(rootViewController: ProfileViewController())
         let tabProfileBarItem = UITabBarItem(
-            title: "Chatbot",
-            image: UIImage(systemName: "bubble.left")?.withRenderingMode(.alwaysOriginal),
-            selectedImage: UIImage(systemName: "bubble.left.fill")
+            title: "Profile",
+            image: UIImage(systemName: "person")?.withRenderingMode(.alwaysTemplate),
+            selectedImage: UIImage(systemName: "person.fill")
         )
         tabProfile.tabBarItem = tabProfileBarItem
-        tabProfile.title = "Chatbot"
+        tabProfile.title = "Profile"
+
+        //MARK: setting up Chatbot tab bar...
+        let tabChatbot = UINavigationController(rootViewController: ChatbotViewController())
+        let tabChatbotBarItem = UITabBarItem(
+            title: "Chatbot",
+            image: UIImage(systemName: "bubble.left")?.withRenderingMode(.alwaysTemplate),
+            selectedImage: UIImage(systemName: "bubble.left.fill")
+        )
+        tabChatbot.tabBarItem = tabChatbotBarItem
+        tabChatbot.title = "Chatbot"
         
         //MARK: setting up this view controller as the Tab Bar Controller...
-        self.viewControllers = [tabHome, tabTracking, tabFasting, tabProfile]
+        self.viewControllers = [tabHome, tabTracking, tabFasting, tabProfile, tabChatbot]
         
         
         
@@ -81,5 +93,16 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         view.backgroundColor = .white
         title = "CalFasting"
         
+        Auth.auth().addStateDidChangeListener { [weak self] auth, user in
+            // Update FastingViewController's currentUser when auth state changes
+            if let fastingVC = self?.viewControllers?[2] as? UINavigationController,
+               let rootVC = fastingVC.viewControllers.first as? FastingViewController {
+                rootVC.currentUser = user
+                if user != nil {
+                    rootVC.loadLastFastingSession()
+                    rootVC.loadFastingHistory()
+                }
+            }
+        }
     }
 }
