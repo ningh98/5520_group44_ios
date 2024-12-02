@@ -15,12 +15,7 @@ DerivedData/
 # NB: NIB/XIB files still exist even on Storyboard projects, so we want this...
 *~.nib
 
-# 忽略用户配置
-5520_IOS_Group44.xcodeproj/project.xcworkspace/xcuserdata/
-5520_IOS_Group44.xcodeproj/xcuserdata/
 
-# 忽略 Package.resolved（如果团队允许灵活版本）
-5520_IOS_Group44.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 # OS X temporary files that should never be committed
 #
