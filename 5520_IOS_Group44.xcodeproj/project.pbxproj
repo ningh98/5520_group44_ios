@@ -13,7 +13,6 @@
 		700AE5432CF0543A00A7FF86 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 700AE5422CF0543A00A7FF86 /* Base */; };
 		700AE5452CF0543C00A7FF86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 700AE5442CF0543C00A7FF86 /* Assets.xcassets */; };
 		700AE5482CF0543C00A7FF86 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 700AE5472CF0543C00A7FF86 /* Base */; };
-		700AE5572CF05A0900A7FF86 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 700AE5562CF05A0900A7FF86 /* GoogleService-Info.plist */; };
 		700AE55A2CF05A6600A7FF86 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 700AE5592CF05A6600A7FF86 /* FirebaseAuth */; };
 		700AE55C2CF05A6600A7FF86 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 700AE55B2CF05A6600A7FF86 /* FirebaseFirestore */; };
 		700AE55E2CF05A6600A7FF86 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 700AE55D2CF05A6600A7FF86 /* FirebaseStorage */; };
@@ -49,6 +48,7 @@
 		700AE5A62CF5AB3000A7FF86 /* FoodInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A52CF5AB3000A7FF86 /* FoodInfo.swift */; };
 		700AE5A82CF5B05800A7FF86 /* FoodDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */; };
 		700AE5AA2CF6742200A7FF86 /* FoodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */; };
+		A33D39452CFD31A000EF11CC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,7 +60,6 @@
 		700AE5442CF0543C00A7FF86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		700AE5472CF0543C00A7FF86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		700AE5492CF0543C00A7FF86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		700AE5562CF05A0900A7FF86 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		700AE55F2CF05C3100A7FF86 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		700AE5612CF05D3B00A7FF86 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		700AE5632CF05D8300A7FF86 /* Configs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configs.swift; sourceTree = "<group>"; };
@@ -93,6 +92,7 @@
 		700AE5A52CF5AB3000A7FF86 /* FoodInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodInfo.swift; sourceTree = "<group>"; };
 		700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FoodDetailViewController.swift; path = "5520_IOS_Group44/Tracking Screen/AddMealScreen/FoodDetailViewController.swift"; sourceTree = SOURCE_ROOT; };
 		700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailView.swift; sourceTree = "<group>"; };
+		A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +145,7 @@
 				700AE55F2CF05C3100A7FF86 /* .gitignore */,
 				700AE5462CF0543C00A7FF86 /* LaunchScreen.storyboard */,
 				700AE5492CF0543C00A7FF86 /* Info.plist */,
-				700AE5562CF05A0900A7FF86 /* GoogleService-Info.plist */,
+				A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */,
 			);
 			path = 5520_IOS_Group44;
 			sourceTree = "<group>";
@@ -336,7 +336,7 @@
 			files = (
 				700AE5602CF05C3100A7FF86 /* .gitignore in Resources */,
 				700AE5452CF0543C00A7FF86 /* Assets.xcassets in Resources */,
-				700AE5572CF05A0900A7FF86 /* GoogleService-Info.plist in Resources */,
+				A33D39452CFD31A000EF11CC /* GoogleService-Info.plist in Resources */,
 				700AE5482CF0543C00A7FF86 /* Base in Resources */,
 				700AE5432CF0543A00A7FF86 /* Base in Resources */,
 			);

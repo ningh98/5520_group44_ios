@@ -49,12 +49,12 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         //MARK: setting up Profile tab bar...
         let tabProfile = UINavigationController(rootViewController: ProfileViewController())
         let tabProfileBarItem = UITabBarItem(
-            title: "Profile",
-            image: UIImage(systemName: "person")?.withRenderingMode(.alwaysOriginal),
-            selectedImage: UIImage(systemName: "person.fill")
+            title: "Chatbot",
+            image: UIImage(systemName: "bubble.left")?.withRenderingMode(.alwaysOriginal),
+            selectedImage: UIImage(systemName: "bubble.left.fill")
         )
         tabProfile.tabBarItem = tabProfileBarItem
-        tabProfile.title = "Profile"
+        tabProfile.title = "Chatbot"
         
         //MARK: setting up this view controller as the Tab Bar Controller...
         self.viewControllers = [tabHome, tabTracking, tabFasting, tabProfile]
@@ -83,4 +83,3 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         
     }
 }
-
