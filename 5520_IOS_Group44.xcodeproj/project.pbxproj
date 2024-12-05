@@ -62,6 +62,9 @@
 		A33D39482CFD628D00EF11CC /* ChatbotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39472CFD628D00EF11CC /* ChatbotView.swift */; };
 		A33D394A2CFD62AE00EF11CC /* ChatbotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */; };
 		A33D394C2CFD825900EF11CC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D394B2CFD825900EF11CC /* MessageCell.swift */; };
+		BA3775962D016C84006125EA /* DiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3775952D016C84006125EA /* DiagramView.swift */; };
+		BA3775982D016CC0006125EA /* FastingHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3775972D016CC0006125EA /* FastingHistoryViewController.swift */; };
+		BA37759C2D017AC5006125EA /* HistorySectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA37759B2D017AC5006125EA /* HistorySectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -119,6 +122,9 @@
 		A33D39472CFD628D00EF11CC /* ChatbotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotView.swift; sourceTree = "<group>"; };
 		A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotViewController.swift; sourceTree = "<group>"; };
 		A33D394B2CFD825900EF11CC /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		BA3775952D016C84006125EA /* DiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagramView.swift; sourceTree = "<group>"; };
+		BA3775972D016CC0006125EA /* FastingHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastingHistoryViewController.swift; sourceTree = "<group>"; };
+		BA37759B2D017AC5006125EA /* HistorySectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,6 +270,9 @@
 			children = (
 				700AE5932CF06BFC00A7FF86 /* FastingViewController.swift */,
 				700AE5992CF06C4F00A7FF86 /* FastingView.swift */,
+				BA3775952D016C84006125EA /* DiagramView.swift */,
+				BA3775972D016CC0006125EA /* FastingHistoryViewController.swift */,
+				BA37759B2D017AC5006125EA /* HistorySectionView.swift */,
 			);
 			path = "Fasting Screen";
 			sourceTree = "<group>";
@@ -440,6 +449,7 @@
 				700AE57F2CF06A1300A7FF86 /* SignInProgressIndicatorManager.swift in Sources */,
 				700AE5822CF06A3F00A7FF86 /* MainScreenView.swift in Sources */,
 				700AE5872CF06AE300A7FF86 /* TrackingViewController.swift in Sources */,
+				BA3775962D016C84006125EA /* DiagramView.swift in Sources */,
 				700AE5A22CF2A76B00A7FF86 /* SearchTableViewCell.swift in Sources */,
 				700AE5B12CFEA77900A7FF86 /* AddLogView.swift in Sources */,
 				700AE5B42CFEACAC00A7FF86 /* LogDetailView.swift in Sources */,
@@ -450,11 +460,13 @@
 				700AE5732CF05F0B00A7FF86 /* RegisterProgressIndicatorManager.swift in Sources */,
 				700AE5C12D010ADC00A7FF86 /* AddedFoodTableViewCell.swift in Sources */,
 				700AE5672CF05DD600A7FF86 /* Log.swift in Sources */,
+				BA3775982D016CC0006125EA /* FastingHistoryViewController.swift in Sources */,
 				700AE5A42CF2A95C00A7FF86 /* SearchTableViewManager.swift in Sources */,
 				700AE5622CF05D3B00A7FF86 /* AuthManager.swift in Sources */,
 				A33D394C2CFD825900EF11CC /* MessageCell.swift in Sources */,
 				700AE53C2CF0543A00A7FF86 /* AppDelegate.swift in Sources */,
 				700AE5982CF06C3000A7FF86 /* ProfileView.swift in Sources */,
+				BA37759C2D017AC5006125EA /* HistorySectionView.swift in Sources */,
 				700AE5C62D01108100A7FF86 /* MealDetailView.swift in Sources */,
 				700AE58E2CF06B5600A7FF86 /* MealTableViewCell.swift in Sources */,
 				700AE5B62CFEAD9700A7FF86 /* LogDetailViewController.swift in Sources */,

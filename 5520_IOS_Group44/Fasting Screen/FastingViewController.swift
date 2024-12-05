@@ -21,7 +21,7 @@ class FastingViewController: UIViewController {
     
     private var startFastingView: StartFastingView?
     private var dimmedBackgroundView: UIView?
-    
+        
     override func loadView() {
         view = fastingView
     }
@@ -32,12 +32,20 @@ class FastingViewController: UIViewController {
         setupActions()
         loadLastFastingSession()
         loadFastingHistory()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFastingDataUpdate), name: Notification.Name("FastingDataUpdated"), object: nil)
         
+        self.updateDiagram()
+
         // 添加调试信息
         print("ViewDidLoad completed")
         print("Action button frame: \(fastingView.actionButton.frame)")
         print("Action button isUserInteractionEnabled: \(fastingView.actionButton.isUserInteractionEnabled)")
         print("Action button allTargets: \(fastingView.actionButton.allTargets)")
+    }
+    
+    @objc private func handleFastingDataUpdate() {
+        loadFastingHistory() // Reload fasting history from Firestore
+        updateDiagram()      // Refresh diagram view
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +71,7 @@ class FastingViewController: UIViewController {
         fastingView.actionButton.isUserInteractionEnabled = true
         fastingView.actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         
+        fastingView.diagramView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapDiagram)))
         print("Action button target added") // Debug print
     }
     
@@ -121,7 +130,7 @@ class FastingViewController: UIViewController {
         endTime = nil
         startTimer()
         updateUI()
-        saveFastingSession()
+       
         fastingView.updateForFastingState(isFasting: true)
     }
     
@@ -131,10 +140,12 @@ class FastingViewController: UIViewController {
         
         // 保存结束时间
         endTime = Date()
-        
+
         // 停止计时器
         timer?.invalidate()
         timer = nil
+        
+        saveFastingSession()
         
         // 重置状态
         startTime = nil
@@ -240,7 +251,7 @@ class FastingViewController: UIViewController {
         
         let fastingData = FastingData(startTime: start, endTime: endTime ?? Date())
         
-        let log = Log(date: start, 
+        let log = Log(date: start,
                      comment: "Fasting Session",
                      fastingData: fastingData)
         
@@ -265,6 +276,7 @@ class FastingViewController: UIViewController {
                 
                 // 更新本地数据
                 self?.fastingSessions.insert(log, at: 0)
+                self?.updateDiagram()
             }
     }
     
@@ -290,7 +302,7 @@ class FastingViewController: UIViewController {
                    let endTime = (fastingDataDict["endTime"] as? Timestamp)?.dateValue() {
                     
                     let fastingData = FastingData(startTime: startTime, endTime: endTime)
-                    let log = Log(date: date.dateValue(), 
+                    let log = Log(date: date.dateValue(),
                                 comment: comment,
                                 fastingData: fastingData)
                     
@@ -327,11 +339,58 @@ class FastingViewController: UIViewController {
                     }
                     
                     let fastingData = FastingData(startTime: startTime, endTime: endTime)
-                    return Log(date: date, 
+                    return Log(date: date,
                              comment: comment,
                              fastingData: fastingData)
+                    
                 } ?? []
+                
+                self?.updateDiagram()
             }
+    }
+    
+    func updateDiagram() {
+        self.make7daysData()
+        if let historyVc = self.presentedViewController as? FastingHistoryViewController {
+            historyVc.reloadData(self.fastingSessions)
+        }
+    }
+    
+    func make7daysData() {
+        let calendar = Calendar.current
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "MM/dd"
+        var daysArray: [FastingLog] = []
+        //最近七天默认数据
+        var lastDate = Date()
+        for _ in 0..<7 {
+            let dateStr = dayFormatter.string(from: lastDate)
+            daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
+            if let previousDate = getPreviousDate(lastDate) {
+                lastDate = previousDate
+            }
+        }
+        
+        for log in fastingSessions {
+            if let date = log.fastingData?.startTime, let duration = log.fastingData?.duration {
+                for i in 0..<daysArray.count {
+                    var obj = daysArray[i]
+                    if calendar.isDate(obj.date, inSameDayAs: date) {
+                        obj.duration = obj.duration + duration
+                    }
+                }
+                //比第七天的还要早的数据就不要了
+                if let lastObj = daysArray.last, lastObj.date.compare(date) == .orderedDescending {
+                    break
+                }
+            }
+        }
+        fastingView.diagramView.refresh(logs: daysArray.reversed())
+    }
+    
+    private func getPreviousDate(_ date: Date) -> Date? {
+        let calendar = Calendar.current
+        return calendar.date(byAdding: .day, value: -1, to: date)
     }
     
     private func showStartFastingDialog() {
@@ -520,6 +579,12 @@ class FastingViewController: UIViewController {
         alert.view.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
         present(alert, animated: true)
+    }
+    
+    @objc private func tapDiagram() {
+        let vc = FastingHistoryViewController(fastingSessions: fastingSessions)
+        present(vc, animated: true)
+//        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

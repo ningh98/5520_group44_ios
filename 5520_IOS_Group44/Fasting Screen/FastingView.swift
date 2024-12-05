@@ -111,6 +111,9 @@ class TimeSelectionCard: UIView {
 }
 
 class FastingView: UIView {
+    let bgScrollView: UIScrollView = UIScrollView()
+    let diagramView = DiagramView()
+    
     var progressView: CircularProgressView!
     var fastingForLabel: UILabel!
     var timerLabel: UILabel!
@@ -123,7 +126,7 @@ class FastingView: UIView {
         super.init(frame: frame)
         self.backgroundColor = .systemBackground
         setupViews()
-        setupConstraints()
+//        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -131,48 +134,68 @@ class FastingView: UIView {
     }
     
     private func setupViews() {
-        progressView = CircularProgressView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-        progressView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(progressView)
+        bgScrollView.frame = CGRect(x: 0, y: 40, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        bgScrollView.contentSize = CGSize(width: UIScreen.main.bounds.size.width, height: 1000)
+        addSubview(bgScrollView)
+        
+        progressView = CircularProgressView(frame: CGRect(x: (UIScreen.main.bounds.size.width-300)/2, y: 0, width: 300, height: 300))
+//        progressView.translatesAutoresizingMaskIntoConstraints = false
+        bgScrollView.addSubview(progressView)
+        
+        timerLabel = UILabel()
+        timerLabel.text = "00:00"
+        timerLabel.font = .monospacedDigitSystemFont(ofSize: 44, weight: .medium)
+        timerLabel.textAlignment = .center
+//        timerLabel.translatesAutoresizingMaskIntoConstraints = false
+        timerLabel.frame = CGRect(x: 0, y: (300-44)/2, width: 300, height: 44)
+        progressView.addSubview(timerLabel)
         
         fastingForLabel = UILabel()
         fastingForLabel.text = "Fasting for"
         fastingForLabel.textColor = .secondaryLabel
         fastingForLabel.font = .systemFont(ofSize: 18)
         fastingForLabel.textAlignment = .center
-        fastingForLabel.translatesAutoresizingMaskIntoConstraints = false
+//        fastingForLabel.translatesAutoresizingMaskIntoConstraints = false
+        fastingForLabel.frame = CGRect(x: 0, y: CGRectGetMinY(timerLabel.frame)-21-8, width: 300, height: 21)
         progressView.addSubview(fastingForLabel)
-        
-        timerLabel = UILabel()
-        timerLabel.text = "00:00"
-        timerLabel.font = .monospacedDigitSystemFont(ofSize: 44, weight: .medium)
-        timerLabel.textAlignment = .center
-        timerLabel.translatesAutoresizingMaskIntoConstraints = false
-        progressView.addSubview(timerLabel)
         
         remainingLabel = UILabel()
         remainingLabel.text = "00:00 left"
         remainingLabel.textColor = .secondaryLabel
         remainingLabel.font = .systemFont(ofSize: 16)
         remainingLabel.textAlignment = .center
-        remainingLabel.translatesAutoresizingMaskIntoConstraints = false
+//        remainingLabel.translatesAutoresizingMaskIntoConstraints = false
+        remainingLabel.frame = CGRect(x: 0, y: CGRectGetMaxY(timerLabel.frame)+8, width: 300, height: 21)
         progressView.addSubview(remainingLabel)
         
         actionButton = GradientButton()
         actionButton.setTitle("Start fasting", for: .normal)
-        actionButton.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(actionButton)
+//        actionButton.translatesAutoresizingMaskIntoConstraints = false
+        actionButton.frame = CGRect(x: (UIScreen.main.bounds.size.width-200)/2, y: CGRectGetMaxY(progressView.frame)+40, width: 200, height: 50)
+        bgScrollView.addSubview(actionButton)
         
         startTimeCard = TimeSelectionCard(title: "START")
-        startTimeCard.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(startTimeCard)
+//        startTimeCard.translatesAutoresizingMaskIntoConstraints = false
+        startTimeCard.frame = CGRect(x: 20, y: CGRectGetMaxY(actionButton.frame)+40, width: (UIScreen.main.bounds.width - 60) / 2, height: 80)
+        bgScrollView.addSubview(startTimeCard)
         
         goalTimeCard = TimeSelectionCard(title: "GOAL")
-        goalTimeCard.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(goalTimeCard)
+//        goalTimeCard.translatesAutoresizingMaskIntoConstraints = false
+        goalTimeCard.frame = CGRect(x: CGRectGetMaxX(startTimeCard.frame)+20, y: CGRectGetMinY(startTimeCard.frame), width: CGRectGetWidth(startTimeCard.frame), height: CGRectGetHeight(startTimeCard.frame))
+        bgScrollView.addSubview(goalTimeCard)
         
-        setNeedsLayout()
-        layoutIfNeeded()
+        diagramView.frame = CGRectMake(20, CGRectGetMaxY(startTimeCard.frame)+40, UIScreen.main.bounds.size.width-40, DiagramViewCell.height()+60+20)
+        diagramView.backgroundColor = .white
+        diagramView.layer.cornerRadius = 12
+        diagramView.layer.shadowOffset = CGSize(width: -3, height: -3)
+        diagramView.layer.shadowRadius = 6
+        diagramView.layer.shadowColor = UIColor.black.cgColor
+        diagramView.layer.shadowOpacity = 0.1
+        
+        bgScrollView.addSubview(diagramView)
+        
+//        setNeedsLayout()
+//        layoutIfNeeded()
     }
     
     private func setupConstraints() {
