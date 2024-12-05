@@ -11,6 +11,8 @@ class MainScreenView: UIView {
 
     var profilePic: UIImageView!
     var labelText: UILabel!
+    var addLogButton: UIButton!
+    var addLogLabel: UILabel!
     var tableViewLogs: UITableView!
     
     override init(frame: CGRect){
@@ -19,6 +21,7 @@ class MainScreenView: UIView {
         
         setupProfilePic()
         setupLabelText()
+        setupAddLogButtonAndLabel()
         setupTableViewLogs()
         
         initConstraints()
@@ -45,6 +48,24 @@ class MainScreenView: UIView {
         self.addSubview(labelText)
     }
     
+    func setupAddLogButtonAndLabel() {
+        // Add Log Button
+        addLogButton = UIButton(type: .system)
+        addLogButton.setTitle("+", for: .normal)
+        addLogButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        addLogButton.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(addLogButton)
+
+        // Add Log Label
+        addLogLabel = UILabel()
+        addLogLabel.text = "Add New Log"
+        addLogLabel.font = UIFont.systemFont(ofSize: 16)
+        addLogLabel.textColor = .gray
+        addLogLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(addLogLabel)
+    }
+
+    
     func setupTableViewLogs(){
         tableViewLogs = UITableView()
         tableViewLogs.register(LogsTableViewCell.self, forCellReuseIdentifier: Configs.tableViewLogsID)
@@ -63,7 +84,17 @@ class MainScreenView: UIView {
             labelText.bottomAnchor.constraint(equalTo: profilePic.bottomAnchor),
             labelText.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 8),
             
-            tableViewLogs.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 8),
+            // Add Log Button
+            addLogButton.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 16),
+            addLogButton.leadingAnchor.constraint(equalTo: profilePic.leadingAnchor),
+            addLogButton.widthAnchor.constraint(equalToConstant: 40),
+            addLogButton.heightAnchor.constraint(equalToConstant: 40),
+
+            // Add Log Label
+            addLogLabel.centerYAnchor.constraint(equalTo: addLogButton.centerYAnchor),
+            addLogLabel.leadingAnchor.constraint(equalTo: addLogButton.trailingAnchor, constant: 8),
+            
+            tableViewLogs.topAnchor.constraint(equalTo: addLogButton.bottomAnchor, constant: 8),
             tableViewLogs.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -8),
             tableViewLogs.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             tableViewLogs.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),

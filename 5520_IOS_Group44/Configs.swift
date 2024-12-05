@@ -11,5 +11,6 @@ class Configs{
     static let tableViewTotalTrackingID = "tableViewTotalTrackingID"
     static let tableViewMealID = "tableViewMealID"
     static let searchTableViewID = "searchTableViewID"
+    static let addedFoodTableViewID = "addedFoodTableViewID"
 }
 

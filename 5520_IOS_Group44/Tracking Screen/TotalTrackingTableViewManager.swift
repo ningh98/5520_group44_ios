@@ -30,11 +30,11 @@ extension TrackingViewController: UITableViewDelegate, UITableViewDataSource{
         } else if tableView == trackingView.tableViewMeal {
             let cell = tableView.dequeueReusableCell(withIdentifier: Configs.tableViewMealID, for: indexPath) as! MealTableViewCell
             let meal = mealTracking[indexPath.row]
-            cell.labelMealNumber.text = "Meal #"
-            cell.labelCalories.text = "Calories: \(meal.calories)"
-            cell.labelProtein.text = "Protein: \(meal.protein)"
-            cell.labelCarbs.text = "Carbs: \(meal.carbs)"
-            cell.labelFat.text = "Fats: \(meal.fats)"
+            cell.labelMealNumber.text = meal.name.isEmpty ? "Unnamed Meal" : meal.name
+//            cell.labelCalories.text = "Calories: \(meal.calories)"
+//            cell.labelProtein.text = "Protein: \(meal.protein)"
+//            cell.labelCarbs.text = "Carbs: \(meal.carbs)"
+//            cell.labelFat.text = "Fats: \(meal.fat)"
             return cell
         }
         return UITableViewCell()

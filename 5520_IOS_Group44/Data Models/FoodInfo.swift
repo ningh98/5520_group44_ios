@@ -15,7 +15,11 @@ struct FoodItem: Decodable {
     let food_type: String
     let food_url: String
     let brand_name: String? // Optional, as it may not always be present
-    
+    let custom_calories: Double?
+    let custom_fat: Double?
+    let custom_carbs: Double?
+    let custom_protein:  Double?
+    let custom_servingSize: Double?
     var nutrients: (servingSize: String,calories: String, fat: String, carbs: String, protein: String)? {
         let pattern = #"Per\s+([^|]+)\s*-\s*Calories:\s*(\d+\.?\d*)kcal\s*\|\s*Fat:\s*(\d+\.?\d*)g\s*\|\s*Carbs:\s*(\d+\.?\d*)g\s*\|\s*Protein:\s*(\d+\.?\d*)g"#
 

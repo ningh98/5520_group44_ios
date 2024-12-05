@@ -11,20 +11,20 @@ class MealTableViewCell: UITableViewCell {
     
     var wrapperCellView: UIView!
     var labelMealNumber: UILabel!
-    var labelCalories: UILabel!
-    var labelProtein: UILabel!
-    var labelCarbs: UILabel!
-    var labelFat: UILabel!
+//    var labelCalories: UILabel!
+//    var labelProtein: UILabel!
+//    var labelCarbs: UILabel!
+//    var labelFat: UILabel!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupWrapperCellView()
         setupLabelMealNumber()
-        setupLabelCalories()
-        setupLabelProtein()
-        setupLabelCarbs()
-        setupLabelFat()
+//        setupLabelCalories()
+//        setupLabelProtein()
+//        setupLabelCarbs()
+//        setupLabelFat()
         
         
         initConstraints()
@@ -56,34 +56,34 @@ class MealTableViewCell: UITableViewCell {
         wrapperCellView.addSubview(labelMealNumber)
     }
     
-    func setupLabelCalories(){
-        labelCalories = UILabel()
-        labelCalories.font = UIFont.boldSystemFont(ofSize: 14)
-        labelCalories.translatesAutoresizingMaskIntoConstraints = false
-        wrapperCellView.addSubview(labelCalories)
-    }
-    
-    func setupLabelProtein(){
-        labelProtein = UILabel()
-        labelProtein.font = UIFont.boldSystemFont(ofSize: 14)
-        labelProtein.translatesAutoresizingMaskIntoConstraints = false
-        wrapperCellView.addSubview(labelProtein)
-    }
-    
-    func setupLabelCarbs(){
-        labelCarbs = UILabel()
-        labelCarbs.font = UIFont.boldSystemFont(ofSize: 14)
-        labelCarbs.translatesAutoresizingMaskIntoConstraints = false
-        wrapperCellView.addSubview(labelCarbs)
-    }
-    
-    func setupLabelFat(){
-        labelFat = UILabel()
-        labelFat.font = UIFont.boldSystemFont(ofSize: 14)
-        labelFat.translatesAutoresizingMaskIntoConstraints = false
-        wrapperCellView.addSubview(labelFat)
-    }
-    
+//    func setupLabelCalories(){
+//        labelCalories = UILabel()
+//        labelCalories.font = UIFont.boldSystemFont(ofSize: 14)
+//        labelCalories.translatesAutoresizingMaskIntoConstraints = false
+//        wrapperCellView.addSubview(labelCalories)
+//    }
+//    
+//    func setupLabelProtein(){
+//        labelProtein = UILabel()
+//        labelProtein.font = UIFont.boldSystemFont(ofSize: 14)
+//        labelProtein.translatesAutoresizingMaskIntoConstraints = false
+//        wrapperCellView.addSubview(labelProtein)
+//    }
+//    
+//    func setupLabelCarbs(){
+//        labelCarbs = UILabel()
+//        labelCarbs.font = UIFont.boldSystemFont(ofSize: 14)
+//        labelCarbs.translatesAutoresizingMaskIntoConstraints = false
+//        wrapperCellView.addSubview(labelCarbs)
+//    }
+//    
+//    func setupLabelFat(){
+//        labelFat = UILabel()
+//        labelFat.font = UIFont.boldSystemFont(ofSize: 14)
+//        labelFat.translatesAutoresizingMaskIntoConstraints = false
+//        wrapperCellView.addSubview(labelFat)
+//    }
+//    
     
     func initConstraints(){
         NSLayoutConstraint.activate([
@@ -97,27 +97,27 @@ class MealTableViewCell: UITableViewCell {
             labelMealNumber.heightAnchor.constraint(equalToConstant: 20),
             
             
-            labelCalories.topAnchor.constraint(equalTo: labelMealNumber.bottomAnchor, constant: 2),
-            labelCalories.leadingAnchor.constraint(equalTo: labelMealNumber.leadingAnchor, constant: 16),
-            labelCalories.heightAnchor.constraint(equalToConstant: 20),
+//            labelCalories.topAnchor.constraint(equalTo: labelMealNumber.bottomAnchor, constant: 2),
+//            labelCalories.leadingAnchor.constraint(equalTo: labelMealNumber.leadingAnchor, constant: 16),
+//            labelCalories.heightAnchor.constraint(equalToConstant: 20),
+//            
+//            
+//            labelProtein.topAnchor.constraint(equalTo: labelCalories.bottomAnchor, constant: 2),
+//            labelProtein.leadingAnchor.constraint(equalTo: labelCalories.leadingAnchor),
+//            labelProtein.heightAnchor.constraint(equalToConstant: 16),
+//            
+//            
+//            labelCarbs.topAnchor.constraint(equalTo: labelProtein.bottomAnchor, constant: 2),
+//            labelCarbs.leadingAnchor.constraint(equalTo: labelProtein.leadingAnchor),
+//            labelCarbs.heightAnchor.constraint(equalToConstant: 16),
+//            
+//            
+//            labelFat.topAnchor.constraint(equalTo: labelCarbs.bottomAnchor, constant: 2),
+//            labelFat.leadingAnchor.constraint(equalTo: labelCarbs.leadingAnchor),
+//            labelFat.heightAnchor.constraint(equalToConstant: 16),
             
             
-            labelProtein.topAnchor.constraint(equalTo: labelCalories.bottomAnchor, constant: 2),
-            labelProtein.leadingAnchor.constraint(equalTo: labelCalories.leadingAnchor),
-            labelProtein.heightAnchor.constraint(equalToConstant: 16),
-            
-            
-            labelCarbs.topAnchor.constraint(equalTo: labelProtein.bottomAnchor, constant: 2),
-            labelCarbs.leadingAnchor.constraint(equalTo: labelProtein.leadingAnchor),
-            labelCarbs.heightAnchor.constraint(equalToConstant: 16),
-            
-            
-            labelFat.topAnchor.constraint(equalTo: labelCarbs.bottomAnchor, constant: 2),
-            labelFat.leadingAnchor.constraint(equalTo: labelCarbs.leadingAnchor),
-            labelFat.heightAnchor.constraint(equalToConstant: 16),
-            
-            
-            wrapperCellView.heightAnchor.constraint(equalToConstant: 100)
+            wrapperCellView.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

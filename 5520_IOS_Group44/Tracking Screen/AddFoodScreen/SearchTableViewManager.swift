@@ -10,7 +10,7 @@ import UIKit
 
 
 //MARK: adopting Table View protocols...
-extension AddMealViewController: UITableViewDelegate, UITableViewDataSource{
+extension AddFoodViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return namesForTableView.count
     }
@@ -35,19 +35,24 @@ extension AddMealViewController: UITableViewDelegate, UITableViewDataSource{
         // Navigate to the detail view
         let detailVC = FoodDetailViewController()
         detailVC.foodItem = selectedFood
+        detailVC.currentUser = currentUser
+        detailVC.logId = logId
+        detailVC.mealId = selectedMeal?.mealId // Pass the meal ID
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
 }
 
 //MARK: adopting the search bar protocol...
-extension AddMealViewController: UISearchBarDelegate{
+extension AddFoodViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
                     namesForTableView = [] // Clear the table view
-                    addMealScreen.tableViewSearchResults.reloadData()
+                    addFoodScreen.tableViewSearchResults.reloadData()
         } else {
             fetchFoodData(searchQuery: searchText)
         }
     }
 }
+
+

@@ -1,5 +1,5 @@
 //
-//  AddMealView.swift
+//  AddFoodView.swift
 //  5520_IOS_Group44
 //
 //  Created by Ninghui Cai on 11/23/24.
@@ -7,10 +7,11 @@
 
 import UIKit
 
-class AddMealView: UIView {
+class AddFoodView: UIView {
     var MealNameLabel: UILabel!
     var searchBar: UISearchBar!
     var tableViewSearchResults: UITableView!
+    var tableViewAddedFoods: UITableView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,11 +30,13 @@ class AddMealView: UIView {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(searchBar)
         
-        //MARK: Table view...
+        //MARK: Table view search results...
         tableViewSearchResults = UITableView()
         tableViewSearchResults.register(SearchTableViewCell.self, forCellReuseIdentifier: Configs.searchTableViewID)
         tableViewSearchResults.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(tableViewSearchResults)
+        
+        
         
         //MARK: constraints...
         NSLayoutConstraint.activate([

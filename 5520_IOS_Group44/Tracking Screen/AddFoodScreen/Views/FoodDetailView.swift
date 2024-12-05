@@ -20,6 +20,7 @@ class FoodDetailView: UIView {
     var brandNameLabel: UILabel!
     var customServingSizeTextField: UITextField!
     var addButton: UIButton!
+    
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -59,12 +60,14 @@ class FoodDetailView: UIView {
         customServingSizeTextField.keyboardType = .decimalPad
         customServingSizeTextField.placeholder = "Custom serving size (same unit as orignial)"
         customServingSizeTextField.translatesAutoresizingMaskIntoConstraints = false
+        customServingSizeTextField.addTarget(self, action: #selector(customServingSizeChanged), for: .editingChanged)
         
 
         // Add Button
         addButton = UIButton(type: .system)
         addButton.setTitle("Add to Meal", for: .normal)
         addButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        addButton.isEnabled = false // Initially disable the button
         addButton.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -139,6 +142,9 @@ class FoodDetailView: UIView {
                   brandName: String?,
                   foodURL: String?) {
        foodNameLabel.text = foodName
+       
+       originalNutrients = nutrients // Store the nutrients for calculations
+       
        if let nutrients = nutrients {
            servingSizeLabel.text = "Serving Size: \(nutrients.servingSize)"
            caloriesLabel.text = "Calories: \(nutrients.calories) kcal"
@@ -157,4 +163,43 @@ class FoodDetailView: UIView {
        brandNameLabel.text = brandName != nil ? "Brand: \(brandName!)" : "Brand: Not available"
        foodURLLabel.text = foodURL != nil ? "URL: \(foodURL!)" : "URL: Not available"
    }
+    
+    private var originalNutrients: (servingSize: String, calories: String, fat: String, carbs: String, protein: String)?
+
+    @objc private func customServingSizeChanged() {
+        guard let text = customServingSizeTextField.text,
+                  let customSize = Double(text),
+                  let nutrients = originalNutrients,
+                  let originalServingSize = nutrients.servingSize.extractNumericValue(),
+                  let originalCalories = nutrients.calories.extractNumericValue(),
+                  let originalFat = nutrients.fat.extractNumericValue(),
+                  let originalCarbs = nutrients.carbs.extractNumericValue(),
+                  let originalProtein = nutrients.protein.extractNumericValue() else {
+            addButton.isEnabled = false
+            return
+        }
+        
+        // Calculate the nutrition facts for the custom serving size
+        let multiplier = customSize / nutrients.servingSize.extractNumericValue()!
+        let customCalories = multiplier * nutrients.calories.extractNumericValue()!
+        let customFat = multiplier * nutrients.fat.extractNumericValue()!
+        let customCarbs = multiplier * nutrients.carbs.extractNumericValue()!
+        let customProtein = multiplier * nutrients.protein.extractNumericValue()!
+        
+        // Format to two decimal places
+        let formattedCalories = String(format: "%.2f", customCalories)
+        let formattedFat = String(format: "%.2f", customFat)
+        let formattedCarbs = String(format: "%.2f", customCarbs)
+        let formattedProtein = String(format: "%.2f", customProtein)
+
+        // Update the labels
+            caloriesLabel.text = "Calories: \(formattedCalories) kcal"
+            fatLabel.text = "Fat: \(formattedFat) g"
+            carbsLabel.text = "Carbs: \(formattedCarbs) g"
+            proteinLabel.text = "Protein: \(formattedProtein) g"
+
+        // Enable the button
+        addButton.isEnabled = true
+    }
+    
 }

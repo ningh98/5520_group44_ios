@@ -41,13 +41,23 @@
 		700AE5962CF06C1900A7FF86 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5952CF06C1900A7FF86 /* ProfileViewController.swift */; };
 		700AE5982CF06C3000A7FF86 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5972CF06C3000A7FF86 /* ProfileView.swift */; };
 		700AE59A2CF06C4F00A7FF86 /* FastingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5992CF06C4F00A7FF86 /* FastingView.swift */; };
-		700AE59D2CF2A5D800A7FF86 /* AddMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE59C2CF2A5D800A7FF86 /* AddMealViewController.swift */; };
-		700AE5A02CF2A61C00A7FF86 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE59F2CF2A61C00A7FF86 /* AddMealView.swift */; };
+		700AE59D2CF2A5D800A7FF86 /* AddFoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE59C2CF2A5D800A7FF86 /* AddFoodViewController.swift */; };
+		700AE5A02CF2A61C00A7FF86 /* AddFoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE59F2CF2A61C00A7FF86 /* AddFoodView.swift */; };
 		700AE5A22CF2A76B00A7FF86 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A12CF2A76B00A7FF86 /* SearchTableViewCell.swift */; };
 		700AE5A42CF2A95C00A7FF86 /* SearchTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A32CF2A95C00A7FF86 /* SearchTableViewManager.swift */; };
 		700AE5A62CF5AB3000A7FF86 /* FoodInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A52CF5AB3000A7FF86 /* FoodInfo.swift */; };
-		700AE5A82CF5B05800A7FF86 /* FoodDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */; };
 		700AE5AA2CF6742200A7FF86 /* FoodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */; };
+		700AE5AF2CFEA71900A7FF86 /* AddLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5AE2CFEA71900A7FF86 /* AddLogViewController.swift */; };
+		700AE5B12CFEA77900A7FF86 /* AddLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5B02CFEA77900A7FF86 /* AddLogView.swift */; };
+		700AE5B42CFEACAC00A7FF86 /* LogDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5B32CFEACAC00A7FF86 /* LogDetailView.swift */; };
+		700AE5B62CFEAD9700A7FF86 /* LogDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5B52CFEAD9700A7FF86 /* LogDetailViewController.swift */; };
+		700AE5B82CFEAFC500A7FF86 /* TrackingTableManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5B72CFEAFC500A7FF86 /* TrackingTableManager.swift */; };
+		700AE5BA2CFFE4AE00A7FF86 /* FoodDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5B92CFFE4AE00A7FF86 /* FoodDetailViewController.swift */; };
+		700AE5BD2CFFE52F00A7FF86 /* AddMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5BC2CFFE52F00A7FF86 /* AddMealViewController.swift */; };
+		700AE5BF2CFFE57C00A7FF86 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5BE2CFFE57C00A7FF86 /* AddMealView.swift */; };
+		700AE5C12D010ADC00A7FF86 /* AddedFoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5C02D010ADC00A7FF86 /* AddedFoodTableViewCell.swift */; };
+		700AE5C42D01104200A7FF86 /* MealDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5C32D01104200A7FF86 /* MealDetailViewController.swift */; };
+		700AE5C62D01108100A7FF86 /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AE5C52D01108100A7FF86 /* MealDetailView.swift */; };
 		A33D39452CFD31A000EF11CC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */; };
 		A33D39482CFD628D00EF11CC /* ChatbotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39472CFD628D00EF11CC /* ChatbotView.swift */; };
 		A33D394A2CFD62AE00EF11CC /* ChatbotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */; };
@@ -88,13 +98,23 @@
 		700AE5952CF06C1900A7FF86 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		700AE5972CF06C3000A7FF86 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		700AE5992CF06C4F00A7FF86 /* FastingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastingView.swift; sourceTree = "<group>"; };
-		700AE59C2CF2A5D800A7FF86 /* AddMealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewController.swift; sourceTree = "<group>"; };
-		700AE59F2CF2A61C00A7FF86 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
+		700AE59C2CF2A5D800A7FF86 /* AddFoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodViewController.swift; sourceTree = "<group>"; };
+		700AE59F2CF2A61C00A7FF86 /* AddFoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodView.swift; sourceTree = "<group>"; };
 		700AE5A12CF2A76B00A7FF86 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		700AE5A32CF2A95C00A7FF86 /* SearchTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewManager.swift; sourceTree = "<group>"; };
 		700AE5A52CF5AB3000A7FF86 /* FoodInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodInfo.swift; sourceTree = "<group>"; };
-		700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FoodDetailViewController.swift; path = "5520_IOS_Group44/Tracking Screen/AddMealScreen/FoodDetailViewController.swift"; sourceTree = SOURCE_ROOT; };
 		700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailView.swift; sourceTree = "<group>"; };
+		700AE5AE2CFEA71900A7FF86 /* AddLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLogViewController.swift; sourceTree = "<group>"; };
+		700AE5B02CFEA77900A7FF86 /* AddLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLogView.swift; sourceTree = "<group>"; };
+		700AE5B32CFEACAC00A7FF86 /* LogDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDetailView.swift; sourceTree = "<group>"; };
+		700AE5B52CFEAD9700A7FF86 /* LogDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDetailViewController.swift; sourceTree = "<group>"; };
+		700AE5B72CFEAFC500A7FF86 /* TrackingTableManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingTableManager.swift; sourceTree = "<group>"; };
+		700AE5B92CFFE4AE00A7FF86 /* FoodDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailViewController.swift; sourceTree = "<group>"; };
+		700AE5BC2CFFE52F00A7FF86 /* AddMealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewController.swift; sourceTree = "<group>"; };
+		700AE5BE2CFFE57C00A7FF86 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
+		700AE5C02D010ADC00A7FF86 /* AddedFoodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddedFoodTableViewCell.swift; sourceTree = "<group>"; };
+		700AE5C32D01104200A7FF86 /* MealDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewController.swift; sourceTree = "<group>"; };
+		700AE5C52D01108100A7FF86 /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
 		A33D39442CFD31A000EF11CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A33D39472CFD628D00EF11CC /* ChatbotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotView.swift; sourceTree = "<group>"; };
 		A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotViewController.swift; sourceTree = "<group>"; };
@@ -197,6 +217,8 @@
 		700AE5772CF05F7200A7FF86 /* Home Screen */ = {
 			isa = PBXGroup;
 			children = (
+				700AE5B22CFEAC8400A7FF86 /* LogDetail Screen */,
+				700AE5AB2CFEA65900A7FF86 /* AddLog Screen */,
 				700AE5802CF06A2200A7FF86 /* Views */,
 				700AE5782CF05F8A00A7FF86 /* MainScreenViewController.swift */,
 				700AE57A2CF069D400A7FF86 /* RightBarButtonManager.swift */,
@@ -218,7 +240,8 @@
 		700AE5852CF06AB300A7FF86 /* Tracking Screen */ = {
 			isa = PBXGroup;
 			children = (
-				700AE59B2CF2A56E00A7FF86 /* AddMealScreen */,
+				700AE5BB2CFFE51700A7FF86 /* AddMealScreen */,
+				700AE59B2CF2A56E00A7FF86 /* AddFoodScreen */,
 				700AE58A2CF06B1600A7FF86 /* Views */,
 				700AE5862CF06AE300A7FF86 /* TrackingViewController.swift */,
 				700AE5882CF06B0800A7FF86 /* TotalTrackingTableViewManager.swift */,
@@ -254,25 +277,64 @@
 			path = "Profile Screen";
 			sourceTree = "<group>";
 		};
-		700AE59B2CF2A56E00A7FF86 /* AddMealScreen */ = {
+		700AE59B2CF2A56E00A7FF86 /* AddFoodScreen */ = {
 			isa = PBXGroup;
 			children = (
 				700AE59E2CF2A5DE00A7FF86 /* Views */,
-				700AE5A72CF5B05800A7FF86 /* FoodDetailViewController.swift */,
-				700AE59C2CF2A5D800A7FF86 /* AddMealViewController.swift */,
+				700AE59C2CF2A5D800A7FF86 /* AddFoodViewController.swift */,
 				700AE5A32CF2A95C00A7FF86 /* SearchTableViewManager.swift */,
+				700AE5B92CFFE4AE00A7FF86 /* FoodDetailViewController.swift */,
 			);
-			path = AddMealScreen;
+			path = AddFoodScreen;
 			sourceTree = "<group>";
 		};
 		700AE59E2CF2A5DE00A7FF86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				700AE59F2CF2A61C00A7FF86 /* AddMealView.swift */,
+				700AE59F2CF2A61C00A7FF86 /* AddFoodView.swift */,
 				700AE5A12CF2A76B00A7FF86 /* SearchTableViewCell.swift */,
 				700AE5A92CF6742200A7FF86 /* FoodDetailView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		700AE5AB2CFEA65900A7FF86 /* AddLog Screen */ = {
+			isa = PBXGroup;
+			children = (
+				700AE5AE2CFEA71900A7FF86 /* AddLogViewController.swift */,
+				700AE5B02CFEA77900A7FF86 /* AddLogView.swift */,
+			);
+			path = "AddLog Screen";
+			sourceTree = "<group>";
+		};
+		700AE5B22CFEAC8400A7FF86 /* LogDetail Screen */ = {
+			isa = PBXGroup;
+			children = (
+				700AE5C22D010F6800A7FF86 /* MealDetail Screen */,
+				700AE5B32CFEACAC00A7FF86 /* LogDetailView.swift */,
+				700AE5B52CFEAD9700A7FF86 /* LogDetailViewController.swift */,
+				700AE5B72CFEAFC500A7FF86 /* TrackingTableManager.swift */,
+			);
+			path = "LogDetail Screen";
+			sourceTree = "<group>";
+		};
+		700AE5BB2CFFE51700A7FF86 /* AddMealScreen */ = {
+			isa = PBXGroup;
+			children = (
+				700AE5BC2CFFE52F00A7FF86 /* AddMealViewController.swift */,
+				700AE5BE2CFFE57C00A7FF86 /* AddMealView.swift */,
+			);
+			path = AddMealScreen;
+			sourceTree = "<group>";
+		};
+		700AE5C22D010F6800A7FF86 /* MealDetail Screen */ = {
+			isa = PBXGroup;
+			children = (
+				700AE5C32D01104200A7FF86 /* MealDetailViewController.swift */,
+				700AE5C52D01108100A7FF86 /* MealDetailView.swift */,
+				700AE5C02D010ADC00A7FF86 /* AddedFoodTableViewCell.swift */,
+			);
+			path = "MealDetail Screen";
 			sourceTree = "<group>";
 		};
 		A33D39462CFD626600EF11CC /* Chatbot Screen */ = {
@@ -373,36 +435,46 @@
 				700AE5792CF05F8A00A7FF86 /* MainScreenViewController.swift in Sources */,
 				A33D39482CFD628D00EF11CC /* ChatbotView.swift in Sources */,
 				700AE5642CF05D8300A7FF86 /* Configs.swift in Sources */,
+				700AE5AF2CFEA71900A7FF86 /* AddLogViewController.swift in Sources */,
 				700AE5402CF0543A00A7FF86 /* ViewController.swift in Sources */,
 				700AE57F2CF06A1300A7FF86 /* SignInProgressIndicatorManager.swift in Sources */,
 				700AE5822CF06A3F00A7FF86 /* MainScreenView.swift in Sources */,
 				700AE5872CF06AE300A7FF86 /* TrackingViewController.swift in Sources */,
 				700AE5A22CF2A76B00A7FF86 /* SearchTableViewCell.swift in Sources */,
+				700AE5B12CFEA77900A7FF86 /* AddLogView.swift in Sources */,
+				700AE5B42CFEACAC00A7FF86 /* LogDetailView.swift in Sources */,
+				700AE5BF2CFFE57C00A7FF86 /* AddMealView.swift in Sources */,
+				700AE5BA2CFFE4AE00A7FF86 /* FoodDetailViewController.swift in Sources */,
 				700AE58C2CF06B2D00A7FF86 /* TrackingView.swift in Sources */,
+				700AE5C42D01104200A7FF86 /* MealDetailViewController.swift in Sources */,
 				700AE5732CF05F0B00A7FF86 /* RegisterProgressIndicatorManager.swift in Sources */,
+				700AE5C12D010ADC00A7FF86 /* AddedFoodTableViewCell.swift in Sources */,
 				700AE5672CF05DD600A7FF86 /* Log.swift in Sources */,
 				700AE5A42CF2A95C00A7FF86 /* SearchTableViewManager.swift in Sources */,
 				700AE5622CF05D3B00A7FF86 /* AuthManager.swift in Sources */,
 				A33D394C2CFD825900EF11CC /* MessageCell.swift in Sources */,
 				700AE53C2CF0543A00A7FF86 /* AppDelegate.swift in Sources */,
 				700AE5982CF06C3000A7FF86 /* ProfileView.swift in Sources */,
+				700AE5C62D01108100A7FF86 /* MealDetailView.swift in Sources */,
 				700AE58E2CF06B5600A7FF86 /* MealTableViewCell.swift in Sources */,
+				700AE5B62CFEAD9700A7FF86 /* LogDetailViewController.swift in Sources */,
 				700AE59A2CF06C4F00A7FF86 /* FastingView.swift in Sources */,
 				700AE57D2CF069F400A7FF86 /* LogsTableViewManager.swift in Sources */,
 				700AE56A2CF05E6600A7FF86 /* ProgressSpinnerViewController.swift in Sources */,
 				700AE53E2CF0543A00A7FF86 /* SceneDelegate.swift in Sources */,
+				700AE5B82CFEAFC500A7FF86 /* TrackingTableManager.swift in Sources */,
 				700AE57B2CF069D400A7FF86 /* RightBarButtonManager.swift in Sources */,
 				700AE5892CF06B0800A7FF86 /* TotalTrackingTableViewManager.swift in Sources */,
-				700AE5A82CF5B05800A7FF86 /* FoodDetailViewController.swift in Sources */,
 				700AE5762CF05F4000A7FF86 /* RegisterView.swift in Sources */,
 				700AE56C2CF05E7A00A7FF86 /* ProgressSpinnerDelegate.swift in Sources */,
 				700AE5962CF06C1900A7FF86 /* ProfileViewController.swift in Sources */,
 				A33D394A2CFD62AE00EF11CC /* ChatbotViewController.swift in Sources */,
-				700AE59D2CF2A5D800A7FF86 /* AddMealViewController.swift in Sources */,
+				700AE59D2CF2A5D800A7FF86 /* AddFoodViewController.swift in Sources */,
 				700AE5842CF06A6A00A7FF86 /* LogsTableViewCell.swift in Sources */,
 				700AE5A62CF5AB3000A7FF86 /* FoodInfo.swift in Sources */,
+				700AE5BD2CFFE52F00A7FF86 /* AddMealViewController.swift in Sources */,
 				700AE5712CF05EED00A7FF86 /* RegisterFirebaseManager.swift in Sources */,
-				700AE5A02CF2A61C00A7FF86 /* AddMealView.swift in Sources */,
+				700AE5A02CF2A61C00A7FF86 /* AddFoodView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
