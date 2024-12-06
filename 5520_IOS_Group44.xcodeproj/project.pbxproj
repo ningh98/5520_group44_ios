@@ -62,9 +62,7 @@
 		A33D39482CFD628D00EF11CC /* ChatbotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39472CFD628D00EF11CC /* ChatbotView.swift */; };
 		A33D394A2CFD62AE00EF11CC /* ChatbotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */; };
 		A33D394C2CFD825900EF11CC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D394B2CFD825900EF11CC /* MessageCell.swift */; };
-		BA3775962D016C84006125EA /* DiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3775952D016C84006125EA /* DiagramView.swift */; };
-		BA3775982D016CC0006125EA /* FastingHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3775972D016CC0006125EA /* FastingHistoryViewController.swift */; };
-		BA37759C2D017AC5006125EA /* HistorySectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA37759B2D017AC5006125EA /* HistorySectionView.swift */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,9 +120,7 @@
 		A33D39472CFD628D00EF11CC /* ChatbotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotView.swift; sourceTree = "<group>"; };
 		A33D39492CFD62AE00EF11CC /* ChatbotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotViewController.swift; sourceTree = "<group>"; };
 		A33D394B2CFD825900EF11CC /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		BA3775952D016C84006125EA /* DiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagramView.swift; sourceTree = "<group>"; };
-		BA3775972D016CC0006125EA /* FastingHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastingHistoryViewController.swift; sourceTree = "<group>"; };
-		BA37759B2D017AC5006125EA /* HistorySectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySectionView.swift; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +156,7 @@
 		700AE53A2CF0543A00A7FF86 /* 5520_IOS_Group44 */ = {
 			isa = PBXGroup;
 			children = (
+				A33D394D2D018B2400EF11CC /* Calory Screen */,
 				A33D39462CFD626600EF11CC /* Chatbot Screen */,
 				700AE53B2CF0543A00A7FF86 /* AppDelegate.swift */,
 				700AE53D2CF0543A00A7FF86 /* SceneDelegate.swift */,
@@ -356,6 +353,15 @@
 			path = "Chatbot Screen";
 			sourceTree = "<group>";
 		};
+		A33D394D2D018B2400EF11CC /* Calory Screen */ = {
+			isa = PBXGroup;
+			children = (
+				A33D394E2D018B4100EF11CC /* CaloryTrackingViewController.swift */,
+				A33D39502D018B6B00EF11CC /* CaloryTrackingView.swift */,
+			);
+			path = "Calory Screen";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -451,6 +457,7 @@
 				700AE5872CF06AE300A7FF86 /* TrackingViewController.swift in Sources */,
 				BA3775962D016C84006125EA /* DiagramView.swift in Sources */,
 				700AE5A22CF2A76B00A7FF86 /* SearchTableViewCell.swift in Sources */,
+				A33D394F2D018B4100EF11CC /* CaloryTrackingViewController.swift in Sources */,
 				700AE5B12CFEA77900A7FF86 /* AddLogView.swift in Sources */,
 				700AE5B42CFEACAC00A7FF86 /* LogDetailView.swift in Sources */,
 				700AE5BF2CFFE57C00A7FF86 /* AddMealView.swift in Sources */,
@@ -476,6 +483,7 @@
 				700AE53E2CF0543A00A7FF86 /* SceneDelegate.swift in Sources */,
 				700AE5B82CFEAFC500A7FF86 /* TrackingTableManager.swift in Sources */,
 				700AE57B2CF069D400A7FF86 /* RightBarButtonManager.swift in Sources */,
+				A33D39512D018B6B00EF11CC /* CaloryTrackingView.swift in Sources */,
 				700AE5892CF06B0800A7FF86 /* TotalTrackingTableViewManager.swift in Sources */,
 				700AE5762CF05F4000A7FF86 /* RegisterView.swift in Sources */,
 				700AE56C2CF05E7A00A7FF86 /* ProgressSpinnerDelegate.swift in Sources */,

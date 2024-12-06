@@ -9,6 +9,9 @@ import UIKit
 import FirebaseAuth
 
 class ViewController: UITabBarController, UITabBarControllerDelegate {
+    
+    // 定义 profileTab 的索引，当视图初始化后确定
+    var profileTabIndex: Int? = nil
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -35,6 +38,17 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         )
         tabTracking.tabBarItem = tabTrackingBarItem
         tabTracking.title = "Tracking"
+        
+        //MARK: setting up Calory Tracking tab bar...
+        let caloryTrackingVC = CaloryTrackingViewController()
+        caloryTrackingVC.currentUser = Auth.auth().currentUser
+        let tabCaloryTracking = UINavigationController(rootViewController: caloryTrackingVC)
+        let tabCaloryTrackingBarItem = UITabBarItem(
+            title: "Calories",
+            image: UIImage(systemName: "flame")?.withRenderingMode(.alwaysTemplate),
+            selectedImage: UIImage(systemName: "flame.fill")
+        )
+        tabCaloryTracking.tabBarItem = tabCaloryTrackingBarItem
         
         //MARK: setting up Fasting tab bar...
         let fastingVC = FastingViewController()
@@ -69,33 +83,51 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabChatbot.title = "Chatbot"
         
         //MARK: setting up this view controller as the Tab Bar Controller...
-        self.viewControllers = [tabHome, tabTracking, tabFasting, tabProfile, tabChatbot]
+        // 当前viewControllers顺序为 [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
+        // Index: CaloryTracking=0, Fasting=1, Chatbot=2, Profile=3
+        self.viewControllers = [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
         
+        // Profile是最后一个Index=3
+        profileTabIndex = 3
         
-        
+        // 如果用户未登录，默认选中Profile tab
+        if Auth.auth().currentUser == nil, let profileIndex = profileTabIndex {
+            self.selectedIndex = profileIndex
+        }
     }
     
     // Intercept tab selection
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        // Check if the user is signed in
-        if Auth.auth().currentUser == nil {
-            // If not signed in, show the sign-in popup
-            if let homeVC = viewControllers?.first(where: { $0 is UINavigationController })?.children.first as? MainScreenViewController {
-                homeVC.onSignInBarButtonTapped()
-            }
-            return false
+        // 找出即将选中的 tab 的 index
+        guard let viewControllers = tabBarController.viewControllers,
+              let index = viewControllers.firstIndex(of: viewController) else {
+            return true
         }
+
+        // 如果用户未登录
+        if Auth.auth().currentUser == nil {
+            // 如果点击的不是Profile tab，那么就不允许切换，从而用户只能待在Profile tab
+            if let profileIndex = profileTabIndex, index != profileIndex {
+                // 可以在这里弹出提示要求登录
+                let alert = UIAlertController(title: "Not Signed In", message: "Please sign in to continue.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(alert, animated: true)
+                return false
+            }
+        }
+        
         return true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "CalFasting"
         
         Auth.auth().addStateDidChangeListener { [weak self] auth, user in
             // Update FastingViewController's currentUser when auth state changes
-            if let fastingVC = self?.viewControllers?[2] as? UINavigationController,
+            // 注意，这里viewControllers是 [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
+            // fasting 在 index=1
+            if let fastingVC = self?.viewControllers?[1] as? UINavigationController,
                let rootVC = fastingVC.viewControllers.first as? FastingViewController {
                 rootVC.currentUser = user
                 if user != nil {

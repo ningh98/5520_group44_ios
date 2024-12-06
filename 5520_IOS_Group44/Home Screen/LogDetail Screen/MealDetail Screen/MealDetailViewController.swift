@@ -83,7 +83,14 @@ class MealDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         super.viewDidLoad()
         title = selectedMeal?.name ?? "Meal Details"
         
-       
+        // 添加后退按钮
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.left"),
+            style: .plain,
+            target: self,
+            action: #selector(backButtonTapped)
+        )
+        
         mealDetailView.foodsTableView.delegate = self
         mealDetailView.foodsTableView.dataSource = self
         mealDetailView.addFoodButton.addTarget(self, action: #selector(navigateToAddFoodScreen), for: .touchUpInside)
@@ -91,6 +98,10 @@ class MealDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         fetchFoods()
     }
     
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchFoods() // Fetch the latest data whenever the view appears
@@ -171,4 +182,3 @@ class MealDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         navigationController?.pushViewController(addFoodVC, animated: true)
     }
 }
-

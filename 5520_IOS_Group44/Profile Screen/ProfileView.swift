@@ -43,7 +43,7 @@ class ProfileView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Setup
     private func setupViews() {
         backgroundColor = .systemBackground
@@ -51,7 +51,6 @@ class ProfileView: UIView {
         addSubview(scrollView)
         scrollView.addSubview(stackView)
         
-        // Add items to stack view
         [userNameItem, currentWeightItem, goalWeightItem, heightItem, sexItem,
          birthDateItem, activityLevelItem].forEach { item in
             stackView.addArrangedSubview(item)
@@ -79,7 +78,7 @@ class ProfileItemView: UIView {
     // MARK: - Properties
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .regular) // SF Pro Display Regular
+        label.font = .systemFont(ofSize: 20, weight: .regular) 
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -87,8 +86,8 @@ class ProfileItemView: UIView {
     
     let valueLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .regular) // SF Pro Display Regular
-        label.textColor = UIColor(red: 240/255.0, green: 135/255.0, blue: 50/255.0, alpha: 1.0) // 使用图片中的橙色
+        label.font = .systemFont(ofSize: 20, weight: .regular) 
+        label.textColor = UIColor(red: 240/255.0, green: 135/255.0, blue: 50/255.0, alpha: 1.0) 
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -104,7 +103,7 @@ class ProfileItemView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Setup
     private func setupView() {
         backgroundColor = .systemBackground
