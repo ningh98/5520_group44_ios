@@ -17,8 +17,8 @@ class CaloryTrackingViewController: UIViewController {
     var targetCalories: Int = 1987
     var selectedDate = Date()
     var logId: String?
-    var foods: [FoodItem] = []  // 存储食物列表
-    var meals: [Meal] = []  // 存储 meals 列表
+    var foods: [FoodItem] = []  // Stores the food list
+    var meals: [Meal] = []  // Stores the meals list
     
     override func loadView() {
         view = caloryTrackingView
@@ -33,15 +33,15 @@ class CaloryTrackingViewController: UIViewController {
         setupTableView()
         updateDateLabel()
         updateLogId()
-        loadTargetCalories()   // 加载当前日期目标卡路里
+        loadTargetCalories()   // Load target calories for the current date
         fetchDailyCalories()
-        fetchMeals()           // 获取当前日期 meals 数据
+        fetchMeals()           // Fetch meals data for the current date
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // 每次视图出现时刷新数据
+        // Refresh data every time the view appears
         fetchMeals()
         fetchDailyCalories()
     }
@@ -151,7 +151,7 @@ class CaloryTrackingViewController: UIViewController {
         selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
         updateDateLabel()
         updateLogId()
-        loadTargetCalories()   // 切换日期后重新加载目标卡路里
+        loadTargetCalories()   // Reload target calories when switching dates
         fetchMeals()
         fetchDailyCalories()
     }
@@ -160,7 +160,7 @@ class CaloryTrackingViewController: UIViewController {
         selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
         updateDateLabel()
         updateLogId()
-        loadTargetCalories()   // 切换日期后重新加载目标卡路里
+        loadTargetCalories()   // Reload target calories when switching dates
         fetchMeals()
         fetchDailyCalories()
     }
@@ -191,7 +191,7 @@ class CaloryTrackingViewController: UIViewController {
             self?.selectedDate = datePicker.date
             self?.updateDateLabel()
             self?.updateLogId()
-            self?.loadTargetCalories() // 切换日期后重新加载目标卡路里
+            self?.loadTargetCalories() // Reload target calories when switching dates
             self?.fetchMeals()
             self?.fetchDailyCalories()
         }
@@ -271,7 +271,7 @@ class CaloryTrackingViewController: UIViewController {
                     }
                 } else {
                     print("📊 No target calories found for date \(dateString)")
-                    // 如果没有找到目标卡路里，设置为默认值 2000
+                    // Set default value to 2000 if no target calories are found
                     DispatchQueue.main.async {
                         self.targetCalories = 2000
                         self.caloryTrackingView.targetCalorieLabel.text = "2000"
@@ -463,7 +463,7 @@ class CaloryTrackingViewController: UIViewController {
             .collection("logs").document(logId)
             .collection("meals").document(mealId)
         
-        // 删除 meal 下的所有 foods
+        // Delete all foods under the meal
         mealRef.collection("foods").getDocuments { snapshot, error in
             if let error = error {
                 print("❌ Error fetching foods to delete: \(error)")

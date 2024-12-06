@@ -10,7 +10,7 @@ import FirebaseAuth
 
 class ViewController: UITabBarController, UITabBarControllerDelegate {
     
-    // 定义 profileTab 的索引，当视图初始化后确定
+    // Define the index of the profile tab, determined after the view is initialized
     var profileTabIndex: Int? = nil
 
     override func viewWillAppear(_ animated: Bool) {
@@ -19,7 +19,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         // Set the delegate to intercept tab selection
         self.delegate = self
         
-        //MARK: setting up Home tab bar...
+        //MARK: Setting up the Home tab bar...
         let tabHome = UINavigationController(rootViewController: MainScreenViewController())
         let tabHomeBarItem = UITabBarItem(
             title: "Home",
@@ -29,7 +29,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabHome.tabBarItem = tabHomeBarItem
         tabHome.title = "Home"
         
-        //MARK: setting up Tracking tab bar...
+        //MARK: Setting up the Tracking tab bar...
         let tabTracking = UINavigationController(rootViewController: TrackingViewController())
         let tabTrackingBarItem = UITabBarItem(
             title: "Tracking",
@@ -39,7 +39,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabTracking.tabBarItem = tabTrackingBarItem
         tabTracking.title = "Tracking"
         
-        //MARK: setting up Calory Tracking tab bar...
+        //MARK: Setting up the Calorie Tracking tab bar...
         let caloryTrackingVC = CaloryTrackingViewController()
         caloryTrackingVC.currentUser = Auth.auth().currentUser
         let tabCaloryTracking = UINavigationController(rootViewController: caloryTrackingVC)
@@ -50,7 +50,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         )
         tabCaloryTracking.tabBarItem = tabCaloryTrackingBarItem
         
-        //MARK: setting up Fasting tab bar...
+        //MARK: Setting up the Fasting tab bar...
         let fastingVC = FastingViewController()
         fastingVC.currentUser = Auth.auth().currentUser
         let tabFasting = UINavigationController(rootViewController: fastingVC)
@@ -62,7 +62,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabFasting.tabBarItem = tabFastingBarItem
         tabFasting.title = "Fasting"
         
-        //MARK: setting up Profile tab bar...
+        //MARK: Setting up the Profile tab bar...
         let tabProfile = UINavigationController(rootViewController: ProfileViewController())
         let tabProfileBarItem = UITabBarItem(
             title: "Profile",
@@ -72,7 +72,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabProfile.tabBarItem = tabProfileBarItem
         tabProfile.title = "Profile"
 
-        //MARK: setting up Chatbot tab bar...
+        //MARK: Setting up the Chatbot tab bar...
         let tabChatbot = UINavigationController(rootViewController: ChatbotViewController())
         let tabChatbotBarItem = UITabBarItem(
             title: "Chatbot",
@@ -82,15 +82,15 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabChatbot.tabBarItem = tabChatbotBarItem
         tabChatbot.title = "Chatbot"
         
-        //MARK: setting up this view controller as the Tab Bar Controller...
-        // 当前viewControllers顺序为 [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
+        //MARK: Setting up this view controller as the Tab Bar Controller...
+        // Current viewControllers order: [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
         // Index: CaloryTracking=0, Fasting=1, Chatbot=2, Profile=3
         self.viewControllers = [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
         
-        // Profile是最后一个Index=3
+        // Profile is the last tab, Index=3
         profileTabIndex = 3
         
-        // 如果用户未登录，默认选中Profile tab
+        // If the user is not logged in, default to selecting the Profile tab
         if Auth.auth().currentUser == nil, let profileIndex = profileTabIndex {
             self.selectedIndex = profileIndex
         }
@@ -98,17 +98,17 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
     
     // Intercept tab selection
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        // 找出即将选中的 tab 的 index
+        // Find the index of the tab to be selected
         guard let viewControllers = tabBarController.viewControllers,
               let index = viewControllers.firstIndex(of: viewController) else {
             return true
         }
 
-        // 如果用户未登录
+        // If the user is not logged in
         if Auth.auth().currentUser == nil {
-            // 如果点击的不是Profile tab，那么就不允许切换，从而用户只能待在Profile tab
+            // Prevent switching to tabs other than the Profile tab
             if let profileIndex = profileTabIndex, index != profileIndex {
-                // 可以在这里弹出提示要求登录
+                // Optionally, show an alert asking the user to log in
                 let alert = UIAlertController(title: "Not Signed In", message: "Please sign in to continue.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default))
                 present(alert, animated: true)
@@ -124,9 +124,9 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         view.backgroundColor = .white
         
         Auth.auth().addStateDidChangeListener { [weak self] auth, user in
-            // Update FastingViewController's currentUser when auth state changes
-            // 注意，这里viewControllers是 [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
-            // fasting 在 index=1
+            // Update FastingViewController's currentUser when the authentication state changes
+            // Note: viewControllers order is [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
+            // fasting is at index=1
             if let fastingVC = self?.viewControllers?[1] as? UINavigationController,
                let rootVC = fastingVC.viewControllers.first as? FastingViewController {
                 rootVC.currentUser = user

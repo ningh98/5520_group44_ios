@@ -21,6 +21,9 @@ class ChatbotViewController: UIViewController {
     private let db = Firestore.firestore()
     private var currentUser: FirebaseAuth.User?
     private var userData: [String: Any]?
+    private var caloriesData: [String: Any]?
+    private var historicalCaloriesData: [[String: Any]] = []  // Store historical calories data
+    private var recentMeals: [[String: Any]] = []
     
     // Grok API configuration
     private let apiUrl = "https://api.x.ai/v1/chat/completions"
@@ -42,8 +45,8 @@ class ChatbotViewController: UIViewController {
                - Use the user's profile data I provide to give personalized advice
                - Provide personalized advice based on user information
                - Use professional yet easy-to-understand language
-               - Emphasize the importance of gradual progress
-               - Remind users about exercise safety
+               - Keep responses concise and focused
+               - Be friendly but avoid formal signatures or greetings
 
             3. Your recommendations should include:
                - Specific exercise suggestions (type, duration, frequency)
@@ -57,6 +60,8 @@ class ChatbotViewController: UIViewController {
             - Use normal capitalization and punctuation
             - Use clear sections with numbers or bullet points
             - Keep the text clean and easy to read
+            - Never add signatures like 'Best regards' or your name at the end
+            - Keep responses natural and conversational
             """
         ]
     ]
@@ -79,7 +84,7 @@ class ChatbotViewController: UIViewController {
     private func loadUserData() {
         guard let userId = currentUser?.uid else { return }
         
-        // 获取用户个人资料
+        // Load basic user data
         db.collection("users").document(userId).getDocument { [weak self] snapshot, error in
             if let error = error {
                 print("Error loading user data: \(error)")
@@ -93,10 +98,168 @@ class ChatbotViewController: UIViewController {
             
             self?.userData = data
             
-            // 显示包含用户数据的欢迎消息
-            DispatchQueue.main.async {
+            // After loading basic data, load calories data
+            self?.loadCaloriesData()
+        }
+    }
+    
+    private func loadCaloriesData() {
+        guard let userId = currentUser?.uid else { return }
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: today)!
+        
+        var historicalData: [[String: Any]] = []
+        let dispatchGroup = DispatchGroup()
+        
+        // Generate dates for the last 30 days
+        var currentDate = today
+        while currentDate >= thirtyDaysAgo {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dateString = dateFormatter.string(from: currentDate)
+            let capturedDate = currentDate
+            
+            dispatchGroup.enter()
+            self.db.collection("users").document(userId)
+                .collection("calorie_targets").document(dateString)
+                .getDocument { [weak self] snapshot, error in
+                    defer { dispatchGroup.leave() }
+                    
+                    var dayData: [String: Any] = [
+                        "date": Timestamp(date: capturedDate),
+                        "dailyCalories": 0.0,
+                        "targetCalories": 2000 // default value
+                    ]
+                    
+                    if let data = snapshot?.data() {
+                        dayData["targetCalories"] = data["target_calories"] as? Int ?? 2000
+                    }
+                    
+                    // Then get daily calories from meals/foods
+                    dispatchGroup.enter()
+                    self?.db.collection("users").document(userId)
+                        .collection("logs").document(dateString)
+                        .collection("meals")
+                        .getDocuments { snapshot, error in
+                            defer { dispatchGroup.leave() }
+                            
+                            var totalCalories: Double = 0
+                            let foodGroup = DispatchGroup()
+                            
+                            if let documents = snapshot?.documents {
+                                for mealDoc in documents {
+                                    foodGroup.enter()
+                                    self?.db.collection("users").document(userId)
+                                        .collection("logs").document(dateString)
+                                        .collection("meals").document(mealDoc.documentID)
+                                        .collection("foods")
+                                        .getDocuments { snapshot, error in
+                                            defer { foodGroup.leave() }
+                                            
+                                            if let foodDocs = snapshot?.documents {
+                                                for foodDoc in foodDocs {
+                                                    let data = foodDoc.data()
+                                                    if let calories = data["custom_calories"] as? Double {
+                                                        totalCalories += calories
+                                                        print("Found calories: \(calories) for date: \(dateString)")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                }
+                            }
+                            
+                            foodGroup.notify(queue: .main) {
+                                dayData["dailyCalories"] = totalCalories
+                                historicalData.append(dayData)
+                                print("Added data for \(dateString): Target: \(dayData["targetCalories"] ?? "nil"), Daily: \(totalCalories)")
+                            }
+                        }
+                }
+            
+            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+        }
+        
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            self?.historicalCaloriesData = historicalData.sorted {
+                let date1 = ($0["date"] as? Timestamp)?.dateValue() ?? Date()
+                let date2 = ($1["date"] as? Timestamp)?.dateValue() ?? Date()
+                return date1 > date2
+            }
+            print("Final historical data count: \(historicalData.count)")
+            self?.caloriesData = self?.historicalCaloriesData.first
+            self?.loadRecentMeals()
+        }
+    }
+    
+    private func loadRecentMeals() {
+        guard let userId = currentUser?.uid else { return }
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: today)!
+        var allMeals: [[String: Any]] = []
+        let dispatchGroup = DispatchGroup()
+        
+        // Generate dates for the last 30 days
+        var currentDate = today
+        while currentDate >= thirtyDaysAgo {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dateString = dateFormatter.string(from: currentDate)
+            let capturedDate = currentDate
+            
+            dispatchGroup.enter()
+            self.db.collection("users").document(userId)
+                .collection("logs").document(dateString)
+                .collection("meals")
+                .getDocuments { [weak self] snapshot, error in
+                    defer { dispatchGroup.leave() }
+                    
+                    if let documents = snapshot?.documents {
+                        for mealDoc in documents {
+                            dispatchGroup.enter()
+                            self?.db.collection("users").document(userId)
+                                .collection("logs").document(dateString)
+                                .collection("meals").document(mealDoc.documentID)
+                                .collection("foods")
+                                .getDocuments { snapshot, error in
+                                    defer { dispatchGroup.leave() }
+                                    
+                                    if let foodDocs = snapshot?.documents {
+                                        for foodDoc in foodDocs {
+                                            var foodData = foodDoc.data()
+                                            foodData["date"] = Timestamp(date: capturedDate)
+                                            foodData["meal_id"] = mealDoc.documentID
+                                            allMeals.append(foodData)
+                                            print("Added meal food: \(foodData["food_name"] ?? "unnamed") with calories: \(foodData["custom_calories"] ?? 0) for date: \(dateString)")
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                }
+            
+            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+        }
+        
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            self?.recentMeals = allMeals.sorted {
+                let date1 = ($0["date"] as? Timestamp)?.dateValue() ?? Date()
+                let date2 = ($1["date"] as? Timestamp)?.dateValue() ?? Date()
+                return date1 > date2
+            }
+            print("Final meals count: \(allMeals.count)")
+            
+            // First show welcome message with user data
+            if let data = self?.userData {
                 self?.showPersonalizedWelcome(with: data)
             }
+            
+            // Then add historical data to the prompt
+            self?.addUserDataToPrompt()
         }
     }
     
@@ -129,7 +292,7 @@ class ChatbotViewController: UIViewController {
     private func addUserDataToPrompt() -> String {
         guard let data = userData else { return "" }
         
-        return """
+        var prompt = """
         User Profile Data:
         - Name: \(data["userName"] as? String ?? "Unknown")
         - Height: \(data["height"] as? String ?? "Unknown")
@@ -137,9 +300,53 @@ class ChatbotViewController: UIViewController {
         - Goal Weight: \(data["goalWeight"] as? Int ?? 0) lbs
         - Activity Level: \(data["activityLevel"] as? String ?? "Unknown")
         - Sex: \(data["sex"] as? String ?? "Unknown")
-        
-        Please consider this information when providing advice.
         """
+        
+        // Add current calories data
+        if let caloriesData = caloriesData {
+            let dailyCalories = caloriesData["dailyCalories"] as? Double ?? 0
+            let targetCalories = caloriesData["targetCalories"] as? Int ?? 0
+            
+            prompt += """
+            
+            Today's Nutrition Data:
+            - Daily Calorie Intake: \(Int(dailyCalories)) calories
+            - Target Daily Calories: \(targetCalories) calories
+            """
+        }
+        
+        // Add historical calories data
+        if !historicalCaloriesData.isEmpty {
+            prompt += "\n\nCalorie History (Last 30 Days):"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM d"
+            
+            // Show last 7 days of data
+            for data in historicalCaloriesData.prefix(7) {
+                if let date = (data["date"] as? Timestamp)?.dateValue(),
+                   let calories = data["dailyCalories"] as? Double {
+                    prompt += "\n- \(dateFormatter.string(from: date)): \(Int(calories)) calories"
+                }
+            }
+        }
+        
+        // Add recent meals
+        if !recentMeals.isEmpty {
+            prompt += "\n\nRecent Meals (Last 30 Days):"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM d, HH:mm"
+            
+            for (index, meal) in recentMeals.prefix(10).enumerated() {
+                let name = meal["name"] as? String ?? "Unknown"
+                let calories = meal["calories"] as? Int ?? 0
+                let date = (meal["date"] as? Timestamp)?.dateValue() ?? Date()
+                
+                prompt += "\n\(index + 1). \(name) (\(calories) calories) - \(dateFormatter.string(from: date))"
+            }
+        }
+        
+        prompt += "\n\nPlease consider this information when providing advice. You can access data from the last 30 days."
+        return prompt
     }
     
     private func setupTableView() {

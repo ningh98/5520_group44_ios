@@ -9,16 +9,46 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
+enum TimeSpan: String, CaseIterable {
+    case week = "1 Week"
+    case month = "1 Month"
+    case threeMonths = "3 Month"
+    case year = "1 Year"
+    
+    var days: Int {
+        switch self {
+        case .week: return 7
+        case .month: return 30
+        case .threeMonths: return 90
+        case .year: return 365
+        }
+    }
+    
+    var interval: Calendar.Component {
+        switch self {
+        case .week: return .day
+        case .month: return .weekOfMonth
+        case .threeMonths: return .month
+        case .year: return .month
+        }
+    }
+    
+    var intervalCount: Int {
+        switch self {
+        case .week: return 1
+        case .month: return 1
+        case .threeMonths: return 2
+        case .year: return 2
+        }
+    }
+}
+
 class FastingHistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var fastingSessions: [Log] = []
     private let dayFormatter = DateFormatter()
     private let timeFormatter = DateFormatter()
+    private var currentTimeSpan: TimeSpan = .week
     
-    var currentUser: FirebaseAuth.User? {
-        return Auth.auth().currentUser
-    }
-    let db = Firestore.firestore()
-
     let diagramView: DiagramView = {
         let view = DiagramView()
         view.frame = CGRectMake(20, 0, UIScreen.main.bounds.size.width-40, DiagramViewCell.height()+60+20)
@@ -53,15 +83,28 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
         return header
     }()
     
-    
     lazy var table: UITableView = {
         let view = UITableView(frame: CGRect(x: 0, y: DiagramViewCell.height()+60+20, width: self.view.bounds.size.width, height: self.view.bounds.size.height-(DiagramViewCell.height()+60+20)), style: .insetGrouped)
         view.dataSource = self
         view.delegate = self
-//        view.tableHeaderView = self.header
         return view
     }()
     
+    lazy var timeSpanButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(currentTimeSpan.rawValue, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
+        button.addTarget(self, action: #selector(showTimeSpanMenu), for: .touchUpInside)
+        return button
+    }()
+    
+    var currentUser: FirebaseAuth.User? {
+        return Auth.auth().currentUser
+    }
+    let db = Firestore.firestore()
+
     init(fastingSessions: [Log]) {
         self.fastingSessions = fastingSessions
         super.init(nibName: nil, bundle: nil)
@@ -77,46 +120,142 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
         table.reloadData()
     }
     
+    private func setupUI() {
+        view.backgroundColor = .systemBackground
+        
+        // Add time span button at the top
+        let buttonContainer = UIView(frame: CGRect(x: 0, y: 20, width: view.bounds.width, height: 44))
+        buttonContainer.backgroundColor = .clear
+        timeSpanButton.frame = CGRect(x: (buttonContainer.bounds.width - 120) / 2, y: 0, width: 120, height: 44)
+        buttonContainer.addSubview(timeSpanButton)
+        view.addSubview(buttonContainer)
+        
+        // Adjust other views' positions
+        let topMargin = buttonContainer.frame.maxY + 10
+        diagramView.frame = CGRect(x: 20, 
+                                 y: topMargin,
+                                 width: UIScreen.main.bounds.size.width-40,
+                                 height: DiagramViewCell.height()+60+20)
+        
+        table.frame = CGRect(x: 0,
+                           y: diagramView.frame.maxY,
+                           width: view.bounds.width,
+                           height: view.bounds.height - diagramView.frame.maxY)
+        
+        view.addSubview(diagramView)
+        view.addSubview(table)
+        
+        // Register the custom cell
+        table.register(HistoryTableViewCell.self, forCellReuseIdentifier: "HistoryCell")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Remove the title setting since we're using a custom titleView
+        // self.title = "History"
+        
+        dayFormatter.dateFormat = "yyyy-MM-dd"
+        timeFormatter.dateFormat = "MM-dd HH:mm"
+        
+        setupUI()
+        makeDaysData()
+    }
+    
+    @objc private func showTimeSpanMenu() {
+        let menu = UIMenu(title: "", children: TimeSpan.allCases.map { span in
+            UIAction(title: span.rawValue) { [weak self] _ in
+                self?.updateTimeSpan(span)
+            }
+        })
+        
+        timeSpanButton.showsMenuAsPrimaryAction = true
+        timeSpanButton.menu = menu
+    }
+    
+    private func updateTimeSpan(_ span: TimeSpan) {
+        currentTimeSpan = span
+        timeSpanButton.setTitle(span.rawValue, for: .normal)
+        makeDaysData()
+    }
+    
     func makeDaysData() {
+        let calendar = Calendar.current
         let dayFormatter = DateFormatter()
-        dayFormatter.dateFormat = "MM/dd"
         var daysArray: [FastingLog] = []
-        //确保显示当前日期的数据
         var lastDate = Date()
-        let dateStr = dayFormatter.string(from: lastDate)
-        daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
+        
+        // Default data for the last 7 days
+        switch currentTimeSpan {
+        case .week:
+            dayFormatter.dateFormat = "MM/dd"
+            for _ in 0..<7 {
+                let dateStr = dayFormatter.string(from: lastDate)
+                daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
+                if let previousDate = calendar.date(byAdding: .day, value: -1, to: lastDate) {
+                    lastDate = previousDate
+                }
+            }
+            
+        case .month:
+            dayFormatter.dateFormat = "MM/dd"
+            for _ in 0..<5 {
+                let dateStr = dayFormatter.string(from: lastDate)
+                daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
+                if let previousDate = calendar.date(byAdding: .day, value: -7, to: lastDate) {
+                    lastDate = previousDate
+                }
+            }
+            
+        case .threeMonths:
+            dayFormatter.dateFormat = "MM/dd"
+            for _ in 0..<7 {
+                let dateStr = dayFormatter.string(from: lastDate)
+                daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
+                if let previousDate = calendar.date(byAdding: .day, value: -14, to: lastDate) {
+                    lastDate = previousDate
+                }
+            }
+            
+        case .year:
+            dayFormatter.dateFormat = "M/d"
+            for _ in 0..<7 {
+                let dateStr = dayFormatter.string(from: lastDate)
+                daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
+                if let previousDate = calendar.date(byAdding: .month, value: -2, to: lastDate) {
+                    lastDate = previousDate
+                }
+            }
+        }
+        
+        // Debug print
+        print("History View - Initial daysArray for \(currentTimeSpan.rawValue):")
+        for day in daysArray {
+            print("Date: \(day.dateString), Duration: \(day.duration)")
+        }
         
         for log in fastingSessions {
             if let date = log.fastingData?.startTime, let duration = log.fastingData?.duration {
-                lastDate = date
-                let dateStr = dayFormatter.string(from: date)
-                var lastObj = daysArray.last
-                if lastObj == nil {
-                    daysArray.append(FastingLog(date: date, dateString: dateStr, duration: duration))
-                } else if lastObj!.dateString == dateStr {
-                    lastObj!.duration = lastObj!.duration + duration
+                print("History View - Processing log - Date: \(date), Duration: \(duration)")
+                
+                if let index = daysArray.firstIndex(where: { calendar.isDate($0.date, inSameDayAs: date) }) {
+                    daysArray[index].duration += duration
+                    print("History View - Updated day[\(index)] - Date: \(daysArray[index].dateString), New Duration: \(daysArray[index].duration)")
+                }
+                
+                if let lastObj = daysArray.last, lastObj.date.compare(date) == .orderedDescending {
+                    break
                 }
             }
         }
         
-        //不满7天历史数据的话至少填充满7天数据
-        if daysArray.count < 7 {
-            let calendar = Calendar.current
-            if daysArray.count > 0 && calendar.isDate(lastDate, inSameDayAs: Date()) {
-                if let previousDate = getPreviousDate(lastDate) {
-                    lastDate = previousDate
-                }
-            }
-            for _ in 0..<7-daysArray.count {
-                let dateStr = dayFormatter.string(from: lastDate)
-                daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
-                if let previousDate = getPreviousDate(lastDate) {
-                    lastDate = previousDate
-                }
-            }
+        // Debug print
+        print("History View - Final daysArray:")
+        for day in daysArray {
+            print("Date: \(day.dateString), Duration: \(day.duration)")
         }
         
         diagramView.refresh(logs: daysArray.reversed())
+        table.reloadData()
     }
     
     private func getPreviousDate(_ date: Date) -> Date? {
@@ -124,27 +263,6 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
         return calendar.date(byAdding: .day, value: -1, to: date)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.title = "History"
-        
-        dayFormatter.dateFormat = "yyyy-MM-dd"
-        timeFormatter.dateFormat = "MM-dd HH:mm"
-        
-        view.backgroundColor = .groupTableViewBackground
-        view.addSubview(diagramView)
-        view.addSubview(table)
-        
-        // Register the custom cell
-        table.register(HistoryTableViewCell.self, forCellReuseIdentifier: "HistoryCell")
-        
-        let navHeight = 30.0
-        diagramView.frame = CGRectMake(20, navHeight, UIScreen.main.bounds.size.width-40, DiagramViewCell.height()+60+20)
-        table.frame = CGRect(x: 0, y: CGRectGetMaxY(diagramView.frame), width: self.view.bounds.size.width, height: self.view.bounds.size.height-CGRectGetMaxY(diagramView.frame)-30)
-        
-        makeDaysData()
-    }
-
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60.0
     }
@@ -227,8 +345,7 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
                     }
                 }
             }
-    }
-
+        }
     
     private func updateFastingSession(_ session: Log, newStartTime: Date, newEndTime: Date, completion: @escaping (Bool) -> Void) {
         guard let user = currentUser else {
@@ -278,7 +395,7 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
                     }
                 }
             }
-    }
+        }
 
     
     private func parseDate(from dateString: String) -> Date? {
@@ -369,4 +486,3 @@ extension FastingHistoryViewController: HistoryTableViewCellDelegate {
     
     
 }
-

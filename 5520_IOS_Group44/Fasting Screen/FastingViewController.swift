@@ -36,7 +36,7 @@ class FastingViewController: UIViewController {
         
         self.updateDiagram()
 
-        // 添加调试信息
+        // Add debug information
         print("ViewDidLoad completed")
         print("Action button frame: \(fastingView.actionButton.frame)")
         print("Action button isUserInteractionEnabled: \(fastingView.actionButton.isUserInteractionEnabled)")
@@ -50,11 +50,7 @@ class FastingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // 确保视图出现时状态正确
-        startTime = nil
-        endTime = nil
-        updateUI()
-        fastingView.updateForFastingState(isFasting: false)
+        loadFastingState()  // Load saved state
     }
     
     private func setupUI() {
@@ -130,7 +126,7 @@ class FastingViewController: UIViewController {
         endTime = nil
         startTimer()
         updateUI()
-       
+        saveFastingState()  // Save state
         fastingView.updateForFastingState(isFasting: true)
     }
     
@@ -138,20 +134,21 @@ class FastingViewController: UIViewController {
         print("Ending fasting session") // Debug print
         guard let start = startTime else { return }
         
-        // 保存结束时间
+        // Save end time
         endTime = Date()
 
-        // 停止计时器
+        // Stop timer
         timer?.invalidate()
         timer = nil
         
         saveFastingSession()
         
-        // 重置状态
+        // Reset state
         startTime = nil
         endTime = nil
+        saveFastingState()  // Save state
         
-        // 更新UI
+        // Update UI
         updateUI()
         fastingView.updateForFastingState(isFasting: false)
         
@@ -169,6 +166,19 @@ class FastingViewController: UIViewController {
         if let start = startTime {
             let duration = (endTime ?? Date()).timeIntervalSince(start)
             let progress = min(duration / targetDuration, 1.0)
+            
+            // Check if target time is reached
+            if duration >= targetDuration {
+                // Show completion alert
+                let alert = UIAlertController(title: "Fasting Complete!", 
+                                            message: "You have completed your fasting goal", 
+                                            preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.endFasting()
+                })
+                present(alert, animated: true)
+                return
+            }
             
             // Update progress ring
             fastingView.progressView.setProgress(to: CGFloat(progress))
@@ -213,7 +223,7 @@ class FastingViewController: UIViewController {
         let now = Date()
         let calendar = Calendar.current
         
-        // 设置默认开始时间为晚上8点
+        // Set default start time to 8pm
         var startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
         startComponents.hour = 20
         startComponents.minute = 0
@@ -221,7 +231,7 @@ class FastingViewController: UIViewController {
             fastingView.startTimeCard.timeLabel.text = "Today, \(formatter.string(from: defaultStart))"
         }
         
-        // 设置默认结束时间为第二天中午12点
+        // Set default end time to 12pm the next day
         var endComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
         endComponents.day! += 1
         endComponents.hour = 12
@@ -255,7 +265,7 @@ class FastingViewController: UIViewController {
                      comment: "Fasting Session",
                      fastingData: fastingData)
         
-        // 将 Log 对象转换为字典
+        // Convert Log object to dictionary
         let data: [String: Any] = [
             "date": log.date,
             "comment": log.comment,
@@ -265,18 +275,26 @@ class FastingViewController: UIViewController {
             ]
         ]
         
+        // Update local data first to ensure UI responsiveness
+        self.fastingSessions.insert(log, at: 0)
+        self.updateDiagram()
+        
+        // Then save to Firestore
         db.collection("users")
             .document(user.uid)
             .collection("fasting_sessions")
             .addDocument(data: data) { [weak self] error in
                 if let error = error {
                     print("Error saving fasting session: \(error)")
+                    // If saving fails, roll back local changes
+                    self?.fastingSessions.removeFirst()
+                    self?.updateDiagram()
                     return
                 }
                 
-                // 更新本地数据
-                self?.fastingSessions.insert(log, at: 0)
-                self?.updateDiagram()
+                print("Fasting session saved successfully")
+                // Post notification to update other views
+                NotificationCenter.default.post(name: Notification.Name("FastingDataUpdated"), object: nil)
             }
     }
     
@@ -306,10 +324,15 @@ class FastingViewController: UIViewController {
                                 comment: comment,
                                 fastingData: fastingData)
                     
-                    self?.startTime = fastingData.startTime
-                    self?.endTime = fastingData.endTime
-                    if self?.endTime == nil {
+                    // Only set state if the last fasting session has not ended
+                    if endTime > Date() {
+                        self?.startTime = fastingData.startTime
+                        self?.endTime = nil  // Ensure endTime is nil to indicate an ongoing session
                         self?.startTimer()
+                    } else {
+                        // If the fasting session has ended, reset state
+                        self?.startTime = nil
+                        self?.endTime = nil
                     }
                     self?.updateUI()
                 }
@@ -361,7 +384,8 @@ class FastingViewController: UIViewController {
         let dayFormatter = DateFormatter()
         dayFormatter.dateFormat = "MM/dd"
         var daysArray: [FastingLog] = []
-        //最近七天默认数据
+        
+        // Default data for the last 7 days
         var lastDate = Date()
         for _ in 0..<7 {
             let dateStr = dayFormatter.string(from: lastDate)
@@ -371,20 +395,35 @@ class FastingViewController: UIViewController {
             }
         }
         
+        // Debug print
+        print("Initial daysArray:")
+        for day in daysArray {
+            print("Date: \(day.dateString), Duration: \(day.duration)")
+        }
+        
+        // Update the duration for each day
         for log in fastingSessions {
             if let date = log.fastingData?.startTime, let duration = log.fastingData?.duration {
-                for i in 0..<daysArray.count {
-                    var obj = daysArray[i]
-                    if calendar.isDate(obj.date, inSameDayAs: date) {
-                        obj.duration = obj.duration + duration
-                    }
+                print("Processing log - Date: \(date), Duration: \(duration)")
+                
+                if let index = daysArray.firstIndex(where: { calendar.isDate($0.date, inSameDayAs: date) }) {
+                    daysArray[index].duration += duration
+                    print("Updated day[\(index)] - Date: \(daysArray[index].dateString), New Duration: \(daysArray[index].duration)")
                 }
-                //比第七天的还要早的数据就不要了
+                
+                // Ignore data older than 7 days
                 if let lastObj = daysArray.last, lastObj.date.compare(date) == .orderedDescending {
                     break
                 }
             }
         }
+        
+        // Debug print
+        print("Final daysArray:")
+        for day in daysArray {
+            print("Date: \(day.dateString), Duration: \(day.duration)")
+        }
+        
         fastingView.diagramView.refresh(logs: daysArray.reversed())
     }
     
@@ -396,17 +435,17 @@ class FastingViewController: UIViewController {
     private func showStartFastingDialog() {
         print("Showing start fasting dialog") // Debug print
         
-        // 计算安全区域
+        // Calculate safe area
         let safeAreaBottom = view.safeAreaInsets.bottom
         let dialogHeight: CGFloat = 400
         
-        // 创建并设置 StartFastingView，考虑底部安全区域
+        // Create and set up StartFastingView, considering the bottom safe area
         startFastingView = StartFastingView(frame: CGRect(x: 0,
                                                          y: view.bounds.height,
                                                          width: view.bounds.width,
                                                          height: dialogHeight))
         
-        // 创建半透明背景
+        // Create a dimmed background
         dimmedBackgroundView = UIView(frame: view.bounds)
         dimmedBackgroundView?.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         dimmedBackgroundView?.alpha = 0
@@ -417,26 +456,26 @@ class FastingViewController: UIViewController {
             return
         }
         
-        // 添加点击手势
+        // Add a tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDimmedViewTap))
         dimmedBackgroundView.addGestureRecognizer(tapGesture)
         
         setupStartFastingDialog()
         
-        // 更新初始时间显示
+        // Update the initial time display
         updateStartFastingViewTimes()
         
-        // 添加视图到层级
+        // Add views to the hierarchy
         view.addSubview(dimmedBackgroundView)
         view.addSubview(startFastingView)
         
-        // 确保视图在最前面
+        // Ensure views are in front
         view.bringSubviewToFront(dimmedBackgroundView)
         view.bringSubviewToFront(startFastingView)
         
         print("Views added to hierarchy") // Debug print
         
-        // 动画显示，考虑底部安全区域
+        // Animate the display, considering the bottom safe area
         UIView.animate(withDuration: 0.3) {
             dimmedBackgroundView.alpha = 1
             startFastingView.frame.origin.y = self.view.bounds.height - dialogHeight - safeAreaBottom
@@ -448,7 +487,7 @@ class FastingViewController: UIViewController {
     private func setupStartFastingDialog() {
         print("Setting up start fasting dialog") // Debug print
         
-        // 添加手势识别器
+        // Add gesture recognizers
         let durationTap = UITapGestureRecognizer(target: self, action: #selector(showDurationPicker))
         startFastingView?.goalDurationValueLabel.isUserInteractionEnabled = true
         startFastingView?.goalDurationValueLabel.addGestureRecognizer(durationTap)
@@ -457,7 +496,7 @@ class FastingViewController: UIViewController {
         startFastingView?.startTimeValueLabel.isUserInteractionEnabled = true
         startFastingView?.startTimeValueLabel.addGestureRecognizer(startTimeTap)
         
-        // 设置按钮动作
+        // Set button actions
         startFastingView?.startButton.addTarget(self, action: #selector(startFastingButtonTapped), for: .touchUpInside)
         startFastingView?.cancelButton.addTarget(self, action: #selector(cancelStartFastingButtonTapped), for: .touchUpInside)
     }
@@ -470,7 +509,7 @@ class FastingViewController: UIViewController {
         guard let dimmedBackgroundView = dimmedBackgroundView,
               let startFastingView = startFastingView else { return }
         
-        // 动画隐藏
+        // Animate the hiding
         UIView.animate(withDuration: 0.3) {
             dimmedBackgroundView.alpha = 0
             startFastingView.frame.origin.y = self.view.bounds.height
@@ -533,7 +572,7 @@ class FastingViewController: UIViewController {
         pickerView.delegate = self
         pickerView.dataSource = self
         
-        // 设置初始选择
+        // Set the initial selection
         let hours = Int(targetDuration / 3600)
         pickerView.selectRow(hours - 1, inComponent: 0, animated: false)
         
@@ -550,7 +589,7 @@ class FastingViewController: UIViewController {
         alert.addAction(doneAction)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
-        // 调整alert视图高度以适应选择器
+        // Adjust the alert view height to fit the picker
         alert.view.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
         present(alert, animated: true)
@@ -575,7 +614,7 @@ class FastingViewController: UIViewController {
         alert.addAction(doneAction)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
-        // 调整alert视图高度以适应选择器
+        // Adjust the alert view height to fit the picker
         alert.view.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
         present(alert, animated: true)
@@ -583,8 +622,37 @@ class FastingViewController: UIViewController {
     
     @objc private func tapDiagram() {
         let vc = FastingHistoryViewController(fastingSessions: fastingSessions)
+        vc.modalPresentationStyle = .pageSheet
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
         present(vc, animated: true)
-//        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // Add methods to save and restore fasting state
+    private func saveFastingState() {
+        if let startTime = startTime {
+            UserDefaults.standard.set(startTime, forKey: "FastingStartTime")
+            UserDefaults.standard.set(targetDuration, forKey: "FastingTargetDuration")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "FastingStartTime")
+            UserDefaults.standard.removeObject(forKey: "FastingTargetDuration")
+        }
+    }
+    
+    private func loadFastingState() {
+        if let savedStartTime = UserDefaults.standard.object(forKey: "FastingStartTime") as? Date {
+            startTime = savedStartTime
+            targetDuration = UserDefaults.standard.double(forKey: "FastingTargetDuration")
+            startTimer()
+            fastingView.updateForFastingState(isFasting: true)
+        } else {
+            startTime = nil
+            endTime = nil
+            fastingView.updateForFastingState(isFasting: false)
+        }
+        updateUI()
     }
 }
 

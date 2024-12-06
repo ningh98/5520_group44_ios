@@ -45,28 +45,28 @@ class CaloryTrackingView: UIView {
     }
     
     private func setupViews() {
-        // 左箭头按钮
+        // Left arrow button
         leftArrowButton = UIButton(type: .system)
         leftArrowButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         leftArrowButton.tintColor = .black
         leftArrowButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(leftArrowButton)
         
-        // 右箭头按钮
+        // Right arrow button
         rightArrowButton = UIButton(type: .system)
         rightArrowButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         rightArrowButton.tintColor = .black
         rightArrowButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(rightArrowButton)
         
-        // 日期标签
+        // Date label
         dateLabel = UILabel()
         dateLabel.font = .systemFont(ofSize: 24, weight: .bold)
         dateLabel.textAlignment = .center
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dateLabel)
         
-        // 白色容器视图
+        // White container view
         containerView = UIView()
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 20
@@ -77,7 +77,7 @@ class CaloryTrackingView: UIView {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(containerView)
         
-        // Calorie Remaining 标签
+        // Calorie Remaining label
         calorieRemainingLabel = UILabel()
         calorieRemainingLabel.text = "Calories Remaining"
         calorieRemainingLabel.font = .systemFont(ofSize: 20, weight: .bold)
@@ -86,14 +86,14 @@ class CaloryTrackingView: UIView {
         calorieRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(calorieRemainingLabel)
         
-        // 苹果图标
+        // Apple icon
         appleImageView = UIImageView(image: UIImage(systemName: "applelogo"))
         appleImageView.tintColor = .systemPink
         appleImageView.contentMode = .scaleAspectFit
         appleImageView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(appleImageView)
         
-        // 目标卡路里标签
+        // Target calorie label
         targetCalorieLabel = UILabel()
         targetCalorieLabel.text = "1,987"
         targetCalorieLabel.font = .systemFont(ofSize: 28, weight: .bold)
@@ -101,14 +101,14 @@ class CaloryTrackingView: UIView {
         targetCalorieLabel.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(targetCalorieLabel)
         
-        // 编辑按钮
+        // Edit target button
         editTargetButton = UIButton(type: .system)
         editTargetButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         editTargetButton.tintColor = .systemOrange
         editTargetButton.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(editTargetButton)
         
-        // 进度条
+        // Progress bar
         progressView = UIProgressView(progressViewStyle: .default)
         progressView.transform = CGAffineTransform(scaleX: 1, y: 4)
         progressView.layer.cornerRadius = 4
@@ -117,7 +117,7 @@ class CaloryTrackingView: UIView {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(progressView)
         
-        // 当前卡路里标签
+        // Current calorie label
         currentCalorieLabel = UILabel()
         currentCalorieLabel.text = "0"
         currentCalorieLabel.font = .systemFont(ofSize: 26, weight: .bold)
@@ -134,7 +134,7 @@ class CaloryTrackingView: UIView {
         dailyCaloriesLabel.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(dailyCaloriesLabel)
         
-        // 添加餐食按钮
+        // Add meal button
         addMealButton = UIButton(type: .system)
         let mealTitle = NSMutableAttributedString(string: "🍔 + Add meal")
         let mealCrownAttachment = NSTextAttachment()
@@ -166,87 +166,87 @@ class CaloryTrackingView: UIView {
     
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            // ScrollView 约束
+            // ScrollView constraints
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            // ContentView 约束
+            // ContentView constraints
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            // 左箭头按钮约束
+            // Left arrow button constraints
             leftArrowButton.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),
             leftArrowButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             
-            // 右箭头按钮约束
+            // Right arrow button constraints
             rightArrowButton.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),
             rightArrowButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            // 日期标签约束
+            // Date label constraints
             dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
             dateLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: leftArrowButton.trailingAnchor, constant: 16),
             dateLabel.trailingAnchor.constraint(equalTo: rightArrowButton.leadingAnchor, constant: -16),
             dateLabel.heightAnchor.constraint(equalToConstant: 40),
             
-            // 容器视图约束
+            // Container view constraints
             containerView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 32),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            // Calorie Remaining 标签约束
+            // Calorie Remaining label constraints
             calorieRemainingLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24),
             calorieRemainingLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             
-            // 苹果图标约束
+            // Apple icon constraints
             appleImageView.centerYAnchor.constraint(equalTo: targetCalorieLabel.centerYAnchor),
             appleImageView.trailingAnchor.constraint(equalTo: targetCalorieLabel.leadingAnchor, constant: -8),
             appleImageView.widthAnchor.constraint(equalToConstant: 24),
             appleImageView.heightAnchor.constraint(equalToConstant: 24),
             
-            // 目标卡路里标签约束
+            // Target calorie label constraints
             targetCalorieLabel.topAnchor.constraint(equalTo: calorieRemainingLabel.bottomAnchor, constant: 40),
             targetCalorieLabel.trailingAnchor.constraint(equalTo: editTargetButton.leadingAnchor, constant: -8),
             
-            // 编辑按钮约束
+            // Edit target button constraints
             editTargetButton.centerYAnchor.constraint(equalTo: targetCalorieLabel.centerYAnchor),
             editTargetButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
             
-            // 进度条约束
+            // Progress bar constraints
             progressView.topAnchor.constraint(equalTo: targetCalorieLabel.bottomAnchor, constant: 24),
             progressView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
             progressView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
             
-            // 当前卡路里标签约束
+            // Current calorie label constraints
             currentCalorieLabel.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 16),
             currentCalorieLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
             
-            // 容器底部约束
+            // Container bottom constraints
             containerView.bottomAnchor.constraint(equalTo: currentCalorieLabel.bottomAnchor, constant: 24),
             
-            // Daily Calories Label 约束
+            // Daily Calories Label constraints
             dailyCaloriesLabel.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 16),
             dailyCaloriesLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             dailyCaloriesLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             dailyCaloriesLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             
-            // 添加餐食按钮约束
+            // Add meal button constraints
             addMealButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 24),
             addMealButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             addMealButton.heightAnchor.constraint(equalToConstant: 44),
             
-            // Meal TableView 约束
+            // Meal TableView constraints
             mealTableView.topAnchor.constraint(equalTo: addMealButton.bottomAnchor, constant: 20),
             mealTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             mealTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             mealTableView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.3),
             
-            // Food TableView 约束
+            // Food TableView constraints
             foodTableView.topAnchor.constraint(equalTo: mealTableView.bottomAnchor, constant: 20),
             foodTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             foodTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
