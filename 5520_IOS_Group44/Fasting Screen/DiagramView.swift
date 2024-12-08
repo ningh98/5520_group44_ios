@@ -15,6 +15,13 @@ struct FastingLog {
 
 class DiagramView: UIView {
     var logs: [FastingLog] = []
+    var displayMode: DisplayMode = .week
+    
+    enum DisplayMode {
+        case week
+        case month
+        case year
+    }
     
     lazy var titleLabel: UILabel = {
         let view = UILabel()
@@ -27,7 +34,6 @@ class DiagramView: UIView {
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: DiagramViewCell.width(), height: DiagramViewCell.height())
         layout.minimumLineSpacing = 15
         
         let view = UICollectionView(frame: CGRect(x: 10, y: 60, width: UIScreen.main.bounds.size.width-40-20-40, height: DiagramViewCell.height()), collectionViewLayout: layout)
@@ -77,17 +83,30 @@ class DiagramView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func refresh(logs: [FastingLog]) {
+    func refresh(logs: [FastingLog], mode: DisplayMode) {
+        self.displayMode = mode
         self.logs.removeAll()
         self.logs.append(contentsOf: logs)
+        
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            let itemWidth = calculateItemWidth(for: mode, totalItems: logs.count)
+            layout.itemSize = CGSize(width: itemWidth, height: DiagramViewCell.height())
+        }
+        
         collectionView.reloadData()
         collectionView.setNeedsLayout()
         collectionView.layoutIfNeeded()
+        
         DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
             if self.logs.count > 0 {
                 self.collectionView.scrollToItem(at: IndexPath(item: self.logs.count-1, section: 0), at: .right, animated: false)
             }
         }
+    }
+    
+    private func calculateItemWidth(for mode: DisplayMode, totalItems: Int) -> CGFloat {
+        let availableWidth = UIScreen.main.bounds.size.width-40-20-40-((CGFloat(totalItems) - 1) * 15)
+        return max(30, availableWidth / CGFloat(totalItems)) // 确保最小宽度为30
     }
 }
 
@@ -164,7 +183,7 @@ class DiagramViewCell: UICollectionViewCell {
     }
     
     static func width() -> CGFloat {
-        return (UIScreen.main.bounds.size.width-40-20-40-6*15)/7.0
+        return 30
     }
     
     static func height() -> CGFloat {

@@ -19,7 +19,7 @@ class ProfileViewController: UIViewController {
     // MARK: - UI Elements for Login/Register
     private let textFieldName: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Name"
+        tf.placeholder = "Name (Optional when signing in)"
         tf.borderStyle = .roundedRect
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
@@ -89,7 +89,6 @@ class ProfileViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // 添加Auth状态监听器
         handleAuth = Auth.auth().addStateDidChangeListener { [weak self] auth, user in
             guard let self = self else { return }
             self.currentUser = user
@@ -99,7 +98,6 @@ class ProfileViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // 移除监听器
         if let handle = handleAuth {
             Auth.auth().removeStateDidChangeListener(handle)
         }
@@ -161,12 +159,10 @@ class ProfileViewController: UIViewController {
     // MARK: - Auth UI Updates
     private func updateUIForUserState() {
         if let _ = currentUser {
-            // 用户已登录
             loadUserData()
             setupRightBarButton(isLoggedin: true)
             loginContainer.isHidden = true
         } else {
-            // 用户未登录
             clearUserDataOnUI()
             setupRightBarButton(isLoggedin: false)
             loginContainer.isHidden = false
@@ -184,16 +180,23 @@ class ProfileViewController: UIViewController {
     @objc private func loginTapped() {
         guard let email = emailTextField.text, !email.isEmpty,
               let pass = passwordTextField.text, !pass.isEmpty else {
+            showAlert(title: "Error", message: "Please enter email and password.")
             return
         }
+        
+        guard isValidEmail(email) else {
+            showAlert(title: "Invalid Email", message: "Please enter a valid email address.")
+            return
+        }
+
         showActivityIndicator()
         Auth.auth().signIn(withEmail: email, password: pass) { [weak self] result, error in
             self?.hideActivityIndicator()
             if let error = error {
                 print("Login error: \(error)")
+                self?.showAlert(title: "Login Error", message: error.localizedDescription)
                 return
             }
-            // 登录成功，状态监听器会更新UI
         }
     }
 
@@ -201,7 +204,7 @@ class ProfileViewController: UIViewController {
         registerNewAccount()
     }
 
-    // MARK: - Register Logic (整合自你的RegisterViewController示例)
+    // MARK: - Register Logic
     func registerNewAccount(){
         showActivityIndicator()
         
@@ -209,21 +212,35 @@ class ProfileViewController: UIViewController {
               let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
             hideActivityIndicator()
+            showAlert(title: "Error", message: "Please fill in all fields.")
             return
         }
-        
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
-            if let error = error {
-                self?.hideActivityIndicator()
-                print("Error creating user: \(error)")
-                return
+
+        guard isValidEmail(email) else {
+            hideActivityIndicator()
+            showAlert(title: "Invalid Email", message: "Please enter a valid email address.")
+            return
+        }
+
+        checkIfEmailExists(email: email) { [weak self] exists in
+            guard let self = self else { return }
+            if exists {
+                self.hideActivityIndicator()
+                self.showAlert(title: "Email Already Used", message: "This email is already registered. Please use a different email.")
+            } else {
+                Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                    if let error = error {
+                        self.hideActivityIndicator()
+                        self.showAlert(title: "Error", message: "Registration failed: \(error.localizedDescription)")
+                    } else {
+                        self.setNameOfTheUserInFirebaseAuth(name: name, email: email)
+                    }
+                }
             }
-            // 用户创建成功
-            self?.setNameOfTheUserInFirebaseAuth(name: name)
         }
     }
 
-    func setNameOfTheUserInFirebaseAuth(name: String){
+    func setNameOfTheUserInFirebaseAuth(name: String, email: String){
         let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
         changeRequest?.displayName = name
         changeRequest?.commitChanges(completion: { [weak self] (error) in
@@ -232,18 +249,18 @@ class ProfileViewController: UIViewController {
                 self?.hideActivityIndicator()
                 return
             }
-            // 名字设置成功后初始化用户数据
             if let userId = Auth.auth().currentUser?.uid {
-                self?.initializeUserData(for: userId)
+                self?.initializeUserData(for: userId, email: email)
             } else {
                 self?.hideActivityIndicator()
             }
         })
     }
 
-    func initializeUserData(for userId: String) {
+    func initializeUserData(for userId: String, email: String) {
         let userData: [String: Any] = [
             "userName": textFieldName.text ?? "New User",
+            "email": email,
             "currentWeight": 0,
             "goalWeight": 0,
             "height": "Not set",
@@ -266,7 +283,6 @@ class ProfileViewController: UIViewController {
     @objc private func logoutTapped() {
         do {
             try Auth.auth().signOut()
-            // 登出后状态监听器会更新界面
         } catch {
             print("Error signing out: \(error)")
         }
@@ -484,6 +500,43 @@ class ProfileViewController: UIViewController {
         alert.view.heightAnchor.constraint(equalToConstant: 300).isActive = true
         present(alert, animated: true)
     }
+
+    // MARK: - Email Validation & Check
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
+
+    private func checkIfEmailExists(email: String, completion: @escaping (Bool) -> Void) {
+        db.collection("users").whereField("email", isEqualTo: email).getDocuments { snapshot, error in
+            if let error = error {
+                print("Error checking email existence: \(error)")
+                completion(false)
+            } else {
+                completion((snapshot?.documents.count ?? 0) > 0)
+            }
+        }
+    }
+
+    // MARK: - Alert & Spinner
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
+    func showActivityIndicator(){
+        addChild(childProgressView)
+        view.addSubview(childProgressView.view)
+        childProgressView.didMove(toParent: self)
+    }
+    
+    func hideActivityIndicator(){
+        childProgressView.willMove(toParent: nil)
+        childProgressView.view.removeFromSuperview()
+        childProgressView.removeFromParent()
+    }
 }
 
 // MARK: - UIPickerViewDelegate & DataSource
@@ -513,20 +566,5 @@ extension ProfileViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         } else {
             return "\(row) in"
         }
-    }
-}
-
-// MARK: - ProgressSpinnerDelegate
-extension ProfileViewController {
-    func showActivityIndicator(){
-        addChild(childProgressView)
-        view.addSubview(childProgressView.view)
-        childProgressView.didMove(toParent: self)
-    }
-    
-    func hideActivityIndicator(){
-        childProgressView.willMove(toParent: nil)
-        childProgressView.view.removeFromSuperview()
-        childProgressView.removeFromParent()
     }
 }

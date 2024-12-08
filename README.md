@@ -28,50 +28,49 @@ If you encounter the following error while running the project:
 
 Package.resolved file is corrupted or malformed; fix or delete the file to continue.
 
+Follow these steps to resolve the issue:
 
-请按照以下步骤解决问题：
-
-1. **删除以下文件**：
-   - 删除项目中的 `Package.resolved` 文件：
+1. **Delete the following files**:
+   - Delete the `Package.resolved` file from the project:
      ```
      rm 5520_group44_ios/5520_IOS_Group44.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
      ```
-   - 删除 Swift Package Manager 的缓存：
+   - Delete the Swift Package Manager cache:
      ```
      rm -rf ~/Library/Caches/org.swift.swiftpm
      ```
 
-2. **重置 Xcode 的包缓存**：
-   - 打开 Xcode。
-   - 依次选择：
+2. **Reset Xcode Package Cache**:
+   - Open Xcode
+   - Select:
      ```
      File > Packages > Reset Package Caches
      ```
 
-3. **重新解析依赖**：
-   - 在 Xcode 中选择：
+3. **Resolve Dependencies**:
+   - In Xcode, select:
      ```
      File > Packages > Resolve Package Versions
      ```
 
-4. **清理构建文件夹**：
-   - 在 Xcode 中选择：
+4. **Clean Build Folder**:
+   - In Xcode, select:
      ```
      Product > Clean Build Folder
      ```
-     或使用快捷键 `Shift + Command + K`。
+     or use the shortcut `Shift + Command + K`
 
-5. **重新运行项目**：
-   - 点击 **Run** 按钮重新构建项目。
+5. **Run the Project Again**:
+   - Click the **Run** button to rebuild the project
 
 ---
 
-### **保存并提交 README 文件**
+### **Save and Submit README File**
 
-1. 在编辑好 `README.md` 文件后，将其保存。
-2. 提交更改并推送到你的分支：
+1. After editing the `README.md` file, save it.
+2. Commit and push your changes to your branch:
    ```bash
    git add README.md
    git commit -m "Add instructions for resolving Package.resolved compatibility issues"
    git push origin feature/your-branch
-
+   ```
