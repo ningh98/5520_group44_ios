@@ -50,7 +50,10 @@ class FastingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadFastingState()  // Load saved state
+        
+        // Update current user and refresh data
+        currentUser = Auth.auth().currentUser
+        loadFastingHistory()
     }
     
     private func setupUI() {

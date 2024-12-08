@@ -93,6 +93,9 @@ class ProfileViewController: UIViewController {
             guard let self = self else { return }
             self.currentUser = user
             self.updateUIForUserState()
+            if user != nil {
+                self.loadUserData() // 加载用户数据
+            }
         }
     }
 

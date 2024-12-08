@@ -41,7 +41,10 @@ class CaloryTrackingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Refresh data every time the view appears
+        // Update current user and refresh data
+        currentUser = Auth.auth().currentUser
+        updateLogId()
+        loadTargetCalories()
         fetchMeals()
         fetchDailyCalories()
     }

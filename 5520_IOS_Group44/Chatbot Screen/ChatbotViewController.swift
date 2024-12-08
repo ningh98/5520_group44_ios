@@ -65,6 +65,21 @@ class ChatbotViewController: UIViewController {
         view = chatbotView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let previousUser = currentUser
+        currentUser = Auth.auth().currentUser
+        
+        // If user has changed, reset the chat
+        if previousUser?.uid != currentUser?.uid {
+            resetChat()
+        }
+        
+        // Update current user and refresh data
+        loadUserData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Health Advisor"
@@ -510,6 +525,17 @@ class ChatbotViewController: UIViewController {
     @objc private func keyboardWillHide(notification: NSNotification) {
         chatbotView.chatTableView.contentInset.bottom = 0
         chatbotView.chatTableView.scrollIndicatorInsets.bottom = 0
+    }
+    
+    private func resetChat() {
+        messages = []
+        conversationHistory = [
+            [
+                "role": "system",
+                "content": systemPrompt
+            ]
+        ]
+        addMessage("Hi! I'm your health advisor. I can help you track your meals and calories. How can I assist you today?", isFromUser: false)
     }
 }
 
