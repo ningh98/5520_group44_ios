@@ -285,6 +285,20 @@ class ChatbotViewController: UIViewController {
     private func addUserDataToPrompt() -> String {
         var prompt = ""
         
+        // Add user profile information
+        if let userData = userData {
+            prompt += "👤 User Profile\n"
+            prompt += "----------------------------------------\n"
+            prompt += "Name: \(userData["userName"] as? String ?? "Not set")\n"
+            prompt += "Weight: \(userData["currentWeight"] as? Int ?? 0) lbs\n"
+            prompt += "Goal Weight: \(userData["goalWeight"] as? Int ?? 0) lbs\n"
+            prompt += "Height: \(userData["height"] as? String ?? "Not set")\n"
+            prompt += "Sex: \(userData["sex"] as? String ?? "Not set")\n"
+            prompt += "Birth Date: \(userData["birthDate"] as? String ?? "Not set")\n"
+            prompt += "Activity Level: \(userData["activityLevel"] as? String ?? "Not set")\n"
+            prompt += "----------------------------------------\n\n"
+        }
+        
         // Add recent meals if available
         if !recentMeals.isEmpty {
             let calendar = Calendar.current
