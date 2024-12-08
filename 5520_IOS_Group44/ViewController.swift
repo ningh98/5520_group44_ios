@@ -7,11 +7,14 @@
 
 import UIKit
 import FirebaseAuth
+import Network
 
 class ViewController: UITabBarController, UITabBarControllerDelegate {
     
     // Define the index of the profile tab, determined after the view is initialized
     var profileTabIndex: Int? = nil
+    private let monitor = NWPathMonitor()
+    private var isConnected = true
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -123,6 +126,9 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        // 设置网络监控
+        setupNetworkMonitoring()
+        
         Auth.auth().addStateDidChangeListener { [weak self] auth, user in
             // Update FastingViewController's currentUser when the authentication state changes
             // Note: viewControllers order is [tabCaloryTracking, tabFasting, tabChatbot, tabProfile]
@@ -136,5 +142,30 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
                 }
             }
         }
+    }
+    
+    // 添加网络监控设置函数
+    private func setupNetworkMonitoring() {
+        monitor.pathUpdateHandler = { [weak self] path in
+            DispatchQueue.main.async {
+                self?.isConnected = path.status == .satisfied
+                if !(self?.isConnected ?? true) {
+                    // 显示网络连接失败的提示
+                    let alert = UIAlertController(
+                        title: "No Internet Connection",
+                        message: "Please check your internet connection and try again.",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self?.present(alert, animated: true)
+                }
+            }
+        }
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        monitor.start(queue: queue)
+    }
+    
+    deinit {
+        monitor.cancel()  // 停止网络监控
     }
 }

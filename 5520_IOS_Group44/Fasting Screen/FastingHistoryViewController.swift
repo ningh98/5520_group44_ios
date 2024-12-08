@@ -151,17 +151,16 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Remove the title setting since we're using a custom titleView
-        // self.title = "History"
         
         dayFormatter.dateFormat = "yyyy-MM-dd"
         timeFormatter.dateFormat = "MM-dd HH:mm"
         
         setupUI()
+        setupTimeSpanMenu()
         makeDaysData()
     }
     
-    @objc private func showTimeSpanMenu() {
+    private func setupTimeSpanMenu() {
         let menu = UIMenu(title: "", children: TimeSpan.allCases.map { span in
             UIAction(title: span.rawValue) { [weak self] _ in
                 self?.updateTimeSpan(span)
@@ -170,6 +169,10 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
         
         timeSpanButton.showsMenuAsPrimaryAction = true
         timeSpanButton.menu = menu
+    }
+    
+    @objc private func showTimeSpanMenu() {
+        
     }
     
     private func updateTimeSpan(_ span: TimeSpan) {
@@ -184,10 +187,10 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
         var daysArray: [FastingLog] = []
         var lastDate = Date()
         
-        // Default data for the last 7 days
         switch currentTimeSpan {
         case .week:
-            dayFormatter.dateFormat = "MM/dd"
+            dayFormatter.dateFormat = "E"  // Show day of week (Mon, Tue, etc.)
+            // Generate data for each day in the week
             for _ in 0..<7 {
                 let dateStr = dayFormatter.string(from: lastDate)
                 daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
@@ -197,64 +200,84 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
             }
             
         case .month:
-            dayFormatter.dateFormat = "MM/dd"
-            for _ in 0..<5 {
+            dayFormatter.dateFormat = "MM/dd"  // Show month/day format
+            // Generate data for each day in the month
+            for _ in 0..<30 {
                 let dateStr = dayFormatter.string(from: lastDate)
                 daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
-                if let previousDate = calendar.date(byAdding: .day, value: -7, to: lastDate) {
+                if let previousDate = calendar.date(byAdding: .day, value: -1, to: lastDate) {
                     lastDate = previousDate
                 }
             }
             
         case .threeMonths:
-            dayFormatter.dateFormat = "MM/dd"
-            for _ in 0..<7 {
+            dayFormatter.dateFormat = "MM/dd"  // Show month/day for weeks
+            // Generate data for each week in three months
+            for _ in 0..<12 {  // 12 weeks in 3 months
                 let dateStr = dayFormatter.string(from: lastDate)
                 daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
-                if let previousDate = calendar.date(byAdding: .day, value: -14, to: lastDate) {
+                if let previousDate = calendar.date(byAdding: .weekOfMonth, value: -1, to: lastDate) {
                     lastDate = previousDate
                 }
             }
             
         case .year:
-            dayFormatter.dateFormat = "M/d"
-            for _ in 0..<7 {
+            dayFormatter.dateFormat = "MMM"  // Show month name (Jan, Feb, etc.)
+            // Generate data for each month in the year
+            for _ in 0..<12 {  // 12 months
                 let dateStr = dayFormatter.string(from: lastDate)
                 daysArray.append(FastingLog(date: lastDate, dateString: dateStr, duration: 0))
-                if let previousDate = calendar.date(byAdding: .month, value: -2, to: lastDate) {
+                if let previousDate = calendar.date(byAdding: .month, value: -1, to: lastDate) {
                     lastDate = previousDate
                 }
             }
         }
         
-        // Debug print
-        print("History View - Initial daysArray for \(currentTimeSpan.rawValue):")
-        for day in daysArray {
-            print("Date: \(day.dateString), Duration: \(day.duration)")
-        }
-        
+        // Calculate total duration for each time period
         for log in fastingSessions {
             if let date = log.fastingData?.startTime, let duration = log.fastingData?.duration {
-                print("History View - Processing log - Date: \(date), Duration: \(duration)")
-                
-                if let index = daysArray.firstIndex(where: { calendar.isDate($0.date, inSameDayAs: date) }) {
-                    daysArray[index].duration += duration
-                    print("History View - Updated day[\(index)] - Date: \(daysArray[index].dateString), New Duration: \(daysArray[index].duration)")
-                }
-                
-                if let lastObj = daysArray.last, lastObj.date.compare(date) == .orderedDescending {
-                    break
+                // Find the appropriate time period for this log
+                switch currentTimeSpan {
+                case .week:
+                    // Daily aggregation
+                    if let index = daysArray.firstIndex(where: { calendar.isDate($0.date, inSameDayAs: date) }) {
+                        daysArray[index].duration += duration
+                    }
+                case .month:
+                    // Daily aggregation
+                    if let index = daysArray.firstIndex(where: { calendar.isDate($0.date, inSameDayAs: date) }) {
+                        daysArray[index].duration += duration
+                    }
+                case .threeMonths:
+                    // Weekly aggregation
+                    if let index = daysArray.firstIndex(where: { 
+                        calendar.isDate(date, equalTo: $0.date, toGranularity: .weekOfMonth)
+                    }) {
+                        daysArray[index].duration += duration
+                    }
+                case .year:
+                    // Monthly aggregation
+                    if let index = daysArray.firstIndex(where: { 
+                        calendar.isDate(date, equalTo: $0.date, toGranularity: .month)
+                    }) {
+                        daysArray[index].duration += duration
+                    }
                 }
             }
         }
         
-        // Debug print
-        print("History View - Final daysArray:")
-        for day in daysArray {
-            print("Date: \(day.dateString), Duration: \(day.duration)")
+        // Convert TimeSpan to DiagramView.DisplayMode
+        let displayMode: DiagramView.DisplayMode
+        switch currentTimeSpan {
+        case .week:
+            displayMode = .week
+        case .month:
+            displayMode = .month
+        case .threeMonths, .year:
+            displayMode = .year
         }
         
-        diagramView.refresh(logs: daysArray.reversed())
+        diagramView.refresh(logs: daysArray.reversed(), mode: displayMode)
         table.reloadData()
     }
     
@@ -409,12 +432,12 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
         let alertController = UIAlertController(title: "Edit Times", message: nil, preferredStyle: .alert)
 
         alertController.addTextField { textField in
-            textField.placeholder = "Start Time"
+            textField.placeholder = "Start Time (MM/dd/yyyy HH:mm)"
             textField.text = DateFormatter.localizedString(from: session.fastingData?.startTime ?? Date(), dateStyle: .medium, timeStyle: .short)
         }
 
         alertController.addTextField { textField in
-            textField.placeholder = "End Time"
+            textField.placeholder = "End Time (MM/dd/yyyy HH:mm)"
             textField.text = DateFormatter.localizedString(from: session.fastingData?.endTime ?? Date(), dateStyle: .medium, timeStyle: .short)
         }
 
@@ -424,26 +447,55 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
                   let endText = alertController.textFields?[1].text,
                   let newStartTime = self.parseDate(from: startText),
                   let newEndTime = self.parseDate(from: endText) else {
-                print("Invalid date input")
+                
+                self.showAlert(title: "Invalid Format", 
+                             message: "Please enter dates in the format: MM/dd/yyyy HH:mm (e.g., 12/07/2024 15:30)")
                 return
             }
-
-            // Update the local session
-            self.fastingSessions[indexPath.row].fastingData?.startTime = newStartTime
-            self.fastingSessions[indexPath.row].fastingData?.endTime = newEndTime
-
-            // Update Firestore
-            self.updateFastingSession(self.fastingSessions[indexPath.row], newStartTime: newStartTime, newEndTime: newEndTime) { success in
-                if success {
-                    // Notify other controllers
-                    NotificationCenter.default.post(name: Notification.Name("FastingDataUpdated"), object: nil)
-
-                    // Refresh the UI
-                    DispatchQueue.main.async {
-                        self.table.reloadRows(at: [indexPath], with: .automatic)
+            
+            
+            if newEndTime <= newStartTime {
+                self.showAlert(title: "Invalid Time Range", 
+                             message: "End time must be after start time")
+                return
+            }
+            
+            
+            let timeInterval = newEndTime.timeIntervalSince(newStartTime)
+            if timeInterval > 7 * 24 * 3600 {
+                self.showAlert(title: "Invalid Duration", 
+                             message: "Fasting duration cannot exceed 7 days")
+                return
+            }
+            
+            
+            self.showConfirmationAlert(title: "Confirm Changes", 
+                                     message: "Are you sure you want to update this fasting record?") { [weak self] confirmed in
+                guard let self = self else { return }
+                if confirmed {
+                    
+                    self.fastingSessions[indexPath.row].fastingData?.startTime = newStartTime
+                    self.fastingSessions[indexPath.row].fastingData?.endTime = newEndTime
+                    
+                    
+                    self.updateFastingSession(self.fastingSessions[indexPath.row], 
+                                            newStartTime: newStartTime, 
+                                            newEndTime: newEndTime) { success in
+                        if success {
+                            NotificationCenter.default.post(name: Notification.Name("FastingDataUpdated"), 
+                                                         object: nil)
+                            DispatchQueue.main.async {
+                                self.table.reloadRows(at: [indexPath], with: .automatic)
+                                self.showAlert(title: "Success", 
+                                             message: "Fasting record updated successfully")
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.showAlert(title: "Error", 
+                                             message: "Failed to update fasting record")
+                            }
+                        }
                     }
-                } else {
-                    print("Failed to update session")
                 }
             }
         }
@@ -454,35 +506,70 @@ class FastingHistoryViewController: UIViewController, UITableViewDataSource, UIT
 
         present(alertController, animated: true)
     }
-
     
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, 
+                                    message: message, 
+                                    preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
     
-
-
+    private func showConfirmationAlert(title: String, 
+                                     message: String, 
+                                     completion: @escaping (Bool) -> Void) {
+        let alert = UIAlertController(title: title, 
+                                    message: message, 
+                                    preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            completion(false)
+        })
+        
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { _ in
+            completion(true)
+        })
+        
+        present(alert, animated: true)
+    }
 
 }
 
+// MARK: - HistoryTableViewCellDelegate
 extension FastingHistoryViewController: HistoryTableViewCellDelegate {
     func didTapDeleteButton(in cell: HistoryTableViewCell) {
         guard let indexPath = table.indexPath(for: cell) else { return }
         let session = fastingSessions[indexPath.row]
-
-        // Perform the deletion
-        deleteSession(session) { success in
-            if success {
-                print("Session deleted successfully.")
-            } else {
-                print("Failed to delete session")
+        
+        
+        showConfirmationAlert(title: "Delete Record", 
+                            message: "Are you sure you want to delete this fasting record? This action cannot be undone.") { [weak self] confirmed in
+            guard let self = self else { return }
+            if confirmed {
+                
+                self.deleteSession(session) { success in
+                    DispatchQueue.main.async {
+                        if success {
+                            self.showAlert(title: "Success", 
+                                         message: "Fasting record deleted successfully")
+                            
+                            self.fastingSessions.remove(at: indexPath.row)
+                            self.table.deleteRows(at: [indexPath], with: .fade)
+                            
+                            NotificationCenter.default.post(name: Notification.Name("FastingDataUpdated"), object: nil)
+                        } else {
+                            self.showAlert(title: "Error", 
+                                         message: "Failed to delete fasting record")
+                        }
+                    }
+                }
             }
         }
     }
-
 
     func didTapEditButton(in cell: HistoryTableViewCell) {
         guard let indexPath = table.indexPath(for: cell) else { return }
         let session = fastingSessions[indexPath.row]
         showEditTimeDialog(for: session, at: indexPath)
     }
-    
-    
 }

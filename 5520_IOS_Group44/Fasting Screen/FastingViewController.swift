@@ -424,7 +424,7 @@ class FastingViewController: UIViewController {
             print("Date: \(day.dateString), Duration: \(day.duration)")
         }
         
-        fastingView.diagramView.refresh(logs: daysArray.reversed())
+        fastingView.diagramView.refresh(logs: daysArray.reversed(), mode: .week)  // 默认使用周视图
     }
     
     private func getPreviousDate(_ date: Date) -> Date? {
