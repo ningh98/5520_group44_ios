@@ -126,7 +126,6 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        // 设置网络监控
         setupNetworkMonitoring()
         
         Auth.auth().addStateDidChangeListener { [weak self] auth, user in
@@ -144,13 +143,11 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         }
     }
     
-    // 添加网络监控设置函数
     private func setupNetworkMonitoring() {
         monitor.pathUpdateHandler = { [weak self] path in
             DispatchQueue.main.async {
                 self?.isConnected = path.status == .satisfied
                 if !(self?.isConnected ?? true) {
-                    // 显示网络连接失败的提示
                     let alert = UIAlertController(
                         title: "No Internet Connection",
                         message: "Please check your internet connection and try again.",
@@ -166,6 +163,6 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
     }
     
     deinit {
-        monitor.cancel()  // 停止网络监控
+        monitor.cancel()  
     }
 }
