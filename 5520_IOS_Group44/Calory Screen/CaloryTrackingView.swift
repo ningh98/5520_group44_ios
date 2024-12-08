@@ -79,7 +79,7 @@ class CaloryTrackingView: UIView {
         
         // Calorie Remaining label
         calorieRemainingLabel = UILabel()
-        calorieRemainingLabel.text = "Calories Remaining"
+        calorieRemainingLabel.text = "Target Calories"
         calorieRemainingLabel.font = .systemFont(ofSize: 20, weight: .bold)
         calorieRemainingLabel.textAlignment = .center
         calorieRemainingLabel.textColor = UIColor(red: 0.8, green: 0.4, blue: 0.8, alpha: 1.0)
